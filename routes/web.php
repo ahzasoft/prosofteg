@@ -77,6 +77,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/checkfa', 'HomeController@checkfa');
     Route::get('/printinvoice', 'HomeController@printinvoice');
     Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/home', 'HomeController@index');
     Route::get('/home2', 'HomeController@index_2');
 
     Route::get('/home/get-totals', 'HomeController@getTotals');
