@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 
 
-include_once('install_r.php');
-
 
 Route::get('/qrcode', 'GenQrcode@index');
 Route::post('/qrcode', 'GenQrcode@test');
