@@ -15,17 +15,38 @@ class GithubController extends Controller
      */
     public function index()
     {
-        $process = new Process(['git', 'pull', 'origin', 'main']);
-        $process->setWorkingDirectory(base_path());
+        $branch = 'main'; // Specify your branch
+        $output = '';
 
         try {
-            $process->mustRun();
+            // Step 1: Fetch the latest changes from the remote
+            $fetchProcess = new Process(['git', 'fetch', 'origin']);
+            $fetchProcess->setWorkingDirectory(base_path());
+            $fetchProcess->mustRun();
 
-            return $process->getOutput();
+            // Step 2: Reset the branch to match the remote
+            $resetProcess = new Process(['git', 'reset', '--hard', "origin/$branch"]);
+            $resetProcess->setWorkingDirectory(base_path());
+            $resetProcess->mustRun();
+
+            // Get the output
+            $output = $resetProcess->getOutput();
         } catch (ProcessFailedException $exception) {
-            return 'Git pull failed: ' . $exception->getMessage();
+            // Handle failure and capture error details
+            return response()->json([
+                'success' => false,
+                'message' => 'Git reset failed.',
+                'error' => $exception->getMessage(),
+            ], 500);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Git reset successful.',
+            'output' => $output,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
