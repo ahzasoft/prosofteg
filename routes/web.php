@@ -43,6 +43,7 @@ Route::get('addtodb',function (){
 
 */
 
+/* Route to get update from git hub */
 Route::get('/gitpull','GithubController@index');
 
 
