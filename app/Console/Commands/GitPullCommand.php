@@ -27,10 +27,10 @@ class GitPullCommand extends Command
      */
     public function handle()
     {
-        $branch = $this->ask('Enter the branch to pull from (default: main)', 'main');
+      /*  $branch = $this->ask('Enter the branch to pull from (default: main)', 'main');
 
-        $this->info("Pulling changes from the '$branch' branch...");
-
+        $this->info("Pulling changes from the '$branch' branch...");*/
+        $branch='main';
         // Run the Git pull command
         $process = new Process(['git', 'pull', 'origin', $branch]);
         $process->setWorkingDirectory(base_path()); // Set the Laravel project root as the working directory
