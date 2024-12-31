@@ -43,7 +43,7 @@ Route::get('addtodb',function (){
 
 */
 
-
+Route::get('/gitpull','GithubController@index');
 
 
 Route::middleware(['setData'])->group(function () {
