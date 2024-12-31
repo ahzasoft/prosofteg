@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Process\Process;
 
 class GithubController extends Controller
 {
@@ -14,7 +15,16 @@ class GithubController extends Controller
      */
     public function index()
     {
-       Artisan::call('git:pull');
+        $process = new Process(['git', 'pull', 'origin', 'main']);
+        $process->setWorkingDirectory(base_path());
+
+        try {
+            $process->mustRun();
+
+            return $process->getOutput();
+        } catch (ProcessFailedException $exception) {
+            return 'Git pull failed: ' . $exception->getMessage();
+        }
     }
 
     /**
