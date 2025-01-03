@@ -13,7 +13,7 @@
                     padding-top: 1px;
                     padding-bottom: 15px;">
 
-                    <h3 style="color: #FFFFFF">{{env('APP_TITLE','AZHA-ERP')}}</h3>
+                    <h3 style="color: #FFFFFF">Prosoft EG</h3>
 
                 </div>
 
