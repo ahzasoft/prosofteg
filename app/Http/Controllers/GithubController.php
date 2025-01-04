@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+
 class GithubController extends Controller
 {
     /**
@@ -43,13 +44,14 @@ class GithubController extends Controller
          $output= [
                 'success' => false,
                 'message' => 'Git reset failed.',
-                'error' => $exception->getMessage(),
+                'output' => $exception->getMessage(),
             ];
         }
 
 
         GithubLog::create($output);
-        return response()-json($output);
+
+        return response()->json($output);
 
     }
 
