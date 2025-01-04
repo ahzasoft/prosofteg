@@ -19,7 +19,7 @@
 
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="brands_table">
+                    <table class="table table-bordered table-striped" >
                         <thead>
                         <tr>
                             <th>status</th>
