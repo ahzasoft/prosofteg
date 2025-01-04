@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GithubLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class GithubController extends Controller
@@ -30,21 +32,25 @@ class GithubController extends Controller
             $resetProcess->mustRun();
 
             // Get the output
-            $output = $resetProcess->getOutput();
+            $result = $resetProcess->getOutput();
+            $output= [
+                'success' => true,
+                'message' => 'Git reset successful.',
+                'output' => $result,
+            ];
         } catch (ProcessFailedException $exception) {
             // Handle failure and capture error details
-            return response()->json([
+         $output= [
                 'success' => false,
                 'message' => 'Git reset failed.',
                 'error' => $exception->getMessage(),
-            ], 500);
+            ];
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Git reset successful.',
-            'output' => $output,
-        ]);
+
+       // GithubLog::create($output);
+        return response()-json($output);
+
     }
 
 
