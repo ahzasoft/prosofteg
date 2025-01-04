@@ -51,7 +51,11 @@ class GithubController extends Controller
 
         GithubLog::create($output);
 
-        return response()->json($output);
+        $data=GithubLog::orderby('id','desc');
+
+        //return response()->json($output);
+
+        return view('brand.gitlogs',compact(['data']));
 
     }
 
