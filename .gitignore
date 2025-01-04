@@ -20,4 +20,5 @@ auth.json
 /tests/
 /database/
 /storage/
-/routes/
+/vendor/
+
