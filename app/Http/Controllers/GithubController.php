@@ -48,7 +48,7 @@ class GithubController extends Controller
         }
 
 
-       // GithubLog::create($output);
+        GithubLog::create($output);
         return response()-json($output);
 
     }
