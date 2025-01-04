@@ -51,7 +51,7 @@ class GithubController extends Controller
 
         GithubLog::create($output);
 
-        $data=GithubLog::get()->orderby('id','desc');
+        $data=GithubLog::get();
 
         //return response()->json($output);
 
