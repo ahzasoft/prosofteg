@@ -1598,7 +1598,6 @@ function pos_each_row(row_obj) {
    var unit_price_inc_tax =
         discounted_unit_price + __calculate_amount('percentage', tax_rate, discounted_unit_price);
      __write_number(row_obj.find('input.pos_unit_price_inc_tax'), unit_price_inc_tax);
-    row_obj.find('span.pos_line_total_text').text(__currency_trans_from_en(unit_price_inc_tax, true));
 
 
     var discount = __read_number(row_obj.find('input.row_discount_amount'));
@@ -1606,7 +1605,9 @@ function pos_each_row(row_obj) {
     var line_total = qty * unit_price_inc_tax;
 
         __write_number(row_obj.find('input.pos_line_total'), line_total);
-        __write_number(row_obj.find('input.item_tax'), unit_price_inc_tax - discounted_unit_price);
+    row_obj.find('span.pos_line_total_text').text(__currency_trans_from_en(line_total, true));
+
+    __write_number(row_obj.find('input.item_tax'), unit_price_inc_tax - discounted_unit_price);
 }
 
 function pos_total_row() {

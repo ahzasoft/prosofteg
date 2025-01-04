@@ -623,7 +623,9 @@ class ImportProductsController extends Controller
                         $product_data['sku2']='';
 
                         //Create new product
-                        $product = Product::create($product_data);
+                        $product = Product::create(
+
+                            $product_data);
                         //If auto generate sku generate new sku
                         if ($product->sku == ' ') {
                             $sku = $this->productUtil->generateProductSku($product->id);

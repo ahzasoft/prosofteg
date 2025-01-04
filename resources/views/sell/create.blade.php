@@ -215,7 +215,7 @@
 						<div class="form-group">
 							{!! Form::label('status', __('sale.status') . ':*') !!}
 							{{--{!! Form::select('status', ['final' => __('sale.final'), 'draft' => __('sale.draft'), 'quotation' => __('lang_v1.quotation'), 'proforma' => __('lang_v1.proforma')], null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}--}}
-							{!! Form::select('status', ['final' => __('sale.final'), 'draft' => __('sale.draft'),'proforma' => __('lang_v1.proforma')], 'final', ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+							{!! Form::select('status',  ['final' => __('sale.final'), 'draft' => __('sale.draft'), 'quotation' => __('lang_v1.quotation'), 'proforma' => __('lang_v1.proforma')], 'final', ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
 						</div>
 					</div>
 				@endif
