@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class BusinessController extends Controller
 {
@@ -607,5 +609,29 @@ class BusinessController extends Controller
         }
 
         return $output;
+    }
+
+    public function webhook(Request $request){
+
+        \Log::info('Webhook payload:', $request->all());
+
+        // Define the repository path
+        $repoPath = '/home/erpneqatycom/public_html/neqatyerp';
+
+        // Run git pull in the repository directory
+        $process = new Process(['git', 'pull', 'origin', 'main'], $repoPath);
+
+        try {
+            $process->mustRun();
+
+            // Log the output of git pull
+            //\Log::info('Git Pull Output: ' . $process->getOutput());
+        } catch (ProcessFailedException $exception) {
+            // Log the error message if the process fails
+            \Log::error('Git Pull Failed: ' . $exception->getMessage());
+            return response('Git pull failed', 500);
+        }
+
+        return response('Webhook processed successfully', 200);
     }
 }

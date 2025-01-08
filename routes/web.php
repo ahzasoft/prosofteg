@@ -45,7 +45,7 @@ Route::get('addtodb',function (){
 
 /* Route to get update from git hub */
 
-
+Route::post('/webhook', 'BusinessController@webhook');
 
 Route::middleware(['setData'])->group(function () {
     Route::get('/welcom', function () {
