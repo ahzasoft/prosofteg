@@ -2,6 +2,7 @@
 
 namespace Modules\Installment\Http\Controllers;
 
+use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -30,55 +31,57 @@ class DataController extends Controller
     /* Module menu*/
     public function modifyAdminMenu()
     {
-
-
-
+        $business_id = session()->get('user.business_id');
         $menu = Menu::instance('admin-sidebar-menu');
-        if (auth()->user()->can('installment.view')) {
-            $menu->dropdown(
-                __('installment::lang.installment'),
-                function ($sub) {
-                    if (auth()->user()->can('installment.system_add')) {
+        $module_util = new ModuleUtil();
+        $is_project_enabled = (boolean)$module_util->hasThePermissionInSubscription($business_id, 'installment_module');
+
+        if ($is_project_enabled) {
+            if (auth()->user()->can('installment.view')) {
+                $menu->dropdown(
+                    __('installment::lang.installment'),
+                    function ($sub) {
+                        if (auth()->user()->can('installment.system_add')) {
+                            $sub->url(
+                                action('\Modules\Installment\Http\Controllers\InstallmentSystemController@index'),
+                                __('installment::lang.installment_plan'),
+                                ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(1) == 'installment' && request()->segment(2) == 'system']
+                            );
+                        }
+
+                        if (auth()->user()->can('installment.create')) {
+                            $sub->url(
+                                action('\Modules\Installment\Http\Controllers\SellController@index'),
+                                __('installment::lang.customer_sells'),
+                                ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(1) == 'installment' && request()->segment(2) == 'sells']
+                            );
+                        }
+
+
                         $sub->url(
-                            action('\Modules\Installment\Http\Controllers\InstallmentSystemController@index'),
-                            __('installment::lang.installment_plan'),
-                            ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(1) == 'installment' && request()->segment(2) == 'system']
+                            action('\Modules\Installment\Http\Controllers\CustomerController@index'),
+                            __('installment::lang.customer'),
+                            ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(1) == 'installment' && request()->segment(2) == 'customer']
                         );
-                    }
 
-                    if (auth()->user()->can('installment.create')) {
                         $sub->url(
-                            action('\Modules\Installment\Http\Controllers\SellController@index'),
-                            __('installment::lang.customer_sells'),
-                            ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(1) == 'installment' && request()->segment(2) == 'sells']
+                            action('\Modules\Installment\Http\Controllers\InstallmentController@index'),
+                            __('installment::lang.installment_report'),
+                            ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(2) == 'installment']
                         );
-                    }
 
+                        $sub->url(
+                            action('\Modules\Installment\Http\Controllers\CustomerController@contacts'),
+                            __('installment::lang.installment_customer'),
+                            ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(2) == 'contacts']
+                        );
 
-                    $sub->url(
-                        action('\Modules\Installment\Http\Controllers\CustomerController@index'),
-                        __('installment::lang.customer'),
-                        ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(1) == 'installment' && request()->segment(2)=='customer' ]
-                    );
+                    },
+                    ['icon' => 'fa fa-cart-plus']
 
-                    $sub->url(
-                        action('\Modules\Installment\Http\Controllers\InstallmentController@index'),
-                        __('installment::lang.installment_report'),
-                        ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(2) == 'installment' ]
-                    );
+                )->order(10);
 
-                    $sub->url(
-                        action('\Modules\Installment\Http\Controllers\CustomerController@contacts'),
-                        __('installment::lang.installment_customer'),
-                        ['icon' => 'fa fas fa-users-cog', 'active' => request()->segment(2) == 'contacts' ]
-                    );
-
-                },
-                ['icon' => 'fa fa-cart-plus']
-
-            )->order(10);
-
-        }
+            }
             /*Menu::modify('admin-sidebar-menu', function ($menu) use ($background_color) {
                 $menu->url(
                     action('\Modules\Installment\Http\Controllers\InstallmentController@index'),
@@ -87,7 +90,7 @@ class DataController extends Controller
                 )
                     ->order(24);
             });*/
-
+        }
 
     }
 

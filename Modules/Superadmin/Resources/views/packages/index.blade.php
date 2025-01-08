@@ -91,7 +91,15 @@
 									@lang('superadmin::lang.trial_days') :{{$package->trial_days}}
 								<br/>
 							@endif
+                               @if(!empty($package->basic_permissions))
+								   @foreach($package->basic_permissions as $permission=>$key)
+									<i class="fa fa-check"></i>	{{__('lang_v1.'.str_replace("'","",$permission))}}
+									<br/>
 
+								   @endforeach
+
+								@endif
+                            <hr>
 							@if(!empty($package->custom_permissions))
 								@foreach($package->custom_permissions as $permission => $value)
 									@isset($permission_formatted[$permission])
@@ -132,6 +140,7 @@
     				<div class="clearfix"></div>
     			@endif
             @endforeach
+
 
             <div class="col-md-12">
                 {{ $packages->links() }}

@@ -116,6 +116,96 @@
 					</div>
 				</div>
 				<div class="clearfix"></div>
+        			<hr>
+                 <?php
+				 //$basic_permissions = json_decode($packages['basic_permissions'], true);
+					 ?>
+				<div class="col-sm-3">
+					<div class="checkbox">
+
+						<label>
+							{!! Form::checkbox("basic_permissions[product_module]", 1, isset($packages->basic_permissions['product_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.product_module')
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[sell_module]", 1,isset($packages->basic_permissions['sell_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.sell_module')
+						</label>
+					</div>
+				</div>
+
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[purchase_module]", 1,isset($packages->basic_permissions['purchase_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.purchase_module')
+						</label>
+					</div>
+				</div>
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[conatcts_module]", 1,isset($packages->basic_permissions['conatcts_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.conatcts_module')
+						</label>
+					</div>
+				</div>
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[kitchen_module]", 1,isset($packages->basic_permissions['kitchen_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.kitchen_module')
+						</label>
+					</div>
+				</div>
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[tax_rate_module]", 1,isset($packages->basic_permissions['tax_rate_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.tax_rate_module')
+						</label>
+					</div>
+				</div>
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[account_module]", 1,isset($packages->basic_permissions['account_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.account_module')
+						</label>
+					</div>
+				</div>
+
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[expances_module]", 1,isset($packages->basic_permissions['expances_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.expances_module')
+						</label>
+					</div>
+				</div>
+
+				<div class="col-sm-3">
+					<div class="checkbox">
+						<label>
+							{!! Form::checkbox("basic_permissions[stock_module]", 1,isset($packages->basic_permissions['stock_module'])? 1:0, ['class' => 'input-icheck']); !!}
+							@lang('lang_v1.stock_module')
+						</label>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<hr>
+
+
 				<div class="col-sm-6">
 					<div class="checkbox">
 					<label>

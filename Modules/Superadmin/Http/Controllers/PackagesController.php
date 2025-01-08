@@ -90,8 +90,16 @@ class PackagesController extends BaseController
         }
 
         try {
-            $input = $request->only(['name', 'description', 'location_count', 'user_count', 'product_count', 'invoice_count', 'interval', 'interval_count', 'trial_days', 'price', 'sort_order', 'is_active', 'custom_permissions', 'is_private', 'is_one_time', 'enable_custom_link', 'custom_link',
-                'custom_link_text']);
+            $input = $request->only(['name', 'description', 'location_count', 'user_count', 'product_count',
+                'invoice_count', 'interval',
+                'interval_count', 'trial_days',
+                'price', 'sort_order', 'is_active',
+                'custom_permissions', 'is_private',
+                'is_one_time', 'enable_custom_link', 'custom_link',
+                'custom_link_text',
+                'basic_permissions'
+            ]);
+
 
             $currency = System::getCurrency();
 
@@ -105,6 +113,7 @@ class PackagesController extends BaseController
 
             $input['custom_link'] = empty($input['enable_custom_link']) ? '' : $input['custom_link'];
             $input['custom_link_text'] = empty($input['enable_custom_link']) ? '' : $input['custom_link_text'];
+
 
             $package = new Package;
             $package->fill($input);
@@ -162,10 +171,18 @@ class PackagesController extends BaseController
         }
 
         try {
-            $packages_details = $request->only(['name', 'id', 'description', 'location_count', 'user_count', 'product_count', 'invoice_count', 'interval', 'interval_count', 'trial_days', 'price', 'sort_order', 'is_active', 'custom_permissions', 'is_private', 'is_one_time', 'enable_custom_link', 'custom_link', 'custom_link_text']);
+            $packages_details = $request->only(['name', 'id', 'description', 'location_count',
+                'user_count', 'product_count', 'invoice_count',
+                'interval', 'interval_count', 'trial_days',
+                'price', 'sort_order', 'is_active',
+                'custom_permissions','basic_permissions', 'is_private',
+                'is_one_time', 'enable_custom_link',
+                'custom_link', 'custom_link_text'
+            ]);
             
             $packages_details['is_active'] = empty($packages_details['is_active']) ? 0 : 1;
             $packages_details['custom_permissions'] = empty($packages_details['custom_permissions']) ? null : $packages_details['custom_permissions'];
+            $packages_details['basic_permissions'] = empty($packages_details['basic_permissions']) ? null : $packages_details['basic_permissions'];
 
             $packages_details['is_private'] = empty($packages_details['is_private']) ? 0 : 1;
             $packages_details['is_one_time'] = empty($packages_details['is_one_time']) ? 0 : 1;
@@ -192,6 +209,11 @@ class PackagesController extends BaseController
                     }
                 }
 
+                if (!empty($package->basic_permissions)) {
+                    foreach ($package->basic_permissions as $name => $value) {
+                        $package_details[$name] = $value;
+                    }
+                }
                 //Update subscription package details
                 $subscriptions = Subscription::where('package_id', $package->id)
                                             ->whereDate('end_date', '>=', \Carbon::now())

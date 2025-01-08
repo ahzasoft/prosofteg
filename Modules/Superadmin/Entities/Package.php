@@ -14,6 +14,7 @@ class Package extends Model
 
     protected $casts = [
         'custom_permissions' => 'array',
+        'basic_permissions' => 'array',
     ];
     
     /**

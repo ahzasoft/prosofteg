@@ -2,7 +2,7 @@
  return [
 "deactivate"=>"إلغاء التنشيط",
 "activate"=>" تنشيط",
- "morebarcode"=>"إضافة باركود",
+"morebarcode"=>"إضافة باركود",
 "add" => "إضافة",
 "edit" => "تعديل",
 "save" => "حفظ",
