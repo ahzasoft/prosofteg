@@ -628,6 +628,7 @@ class BusinessController extends Controller
             //\Log::info('Git Pull Output: ' . $process->getOutput());
         } catch (ProcessFailedException $exception) {
             // Log the error message if the process fails
+
             \Log::error('Git Pull Failed: ' . $exception->getMessage());
             return response('Git pull failed', 500);
         }
