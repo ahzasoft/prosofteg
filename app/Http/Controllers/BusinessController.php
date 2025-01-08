@@ -616,7 +616,7 @@ class BusinessController extends Controller
         \Log::info('Webhook payload:', $request->all());
 
         // Define the repository path
-        $repoPath = '/home/erpneqatycom/public_html/neqatyerp';
+        $repoPath = '/home/prosofte/public_html/erp.prosofteg.com';
 
         // Run git pull in the repository directory
         $process = new Process(['git', 'pull', 'origin', 'main'], $repoPath);
