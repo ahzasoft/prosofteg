@@ -92,6 +92,12 @@ class BaseController extends Controller
                 $subscription['package_details'][$name] = $value;
             }
         }
+
+        if (!empty($package->basic_permissions)) {
+            foreach ($package->basic_permissions as $name => $value) {
+                $subscription['package_details'][$name] = $value;
+            }
+        }
         
         $subscription['created_id'] = $user_id;
 
