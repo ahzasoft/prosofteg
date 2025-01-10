@@ -42,12 +42,12 @@
                         </a>
                     </li>
                     --}}
-                    <li>
+                    {{--<li>
                         <a href="#account_types" data-toggle="tab">
                             <i class="fa fa-list"></i> <strong>
-                            @lang('lang_v1.account_types') </strong>
+                            @lang('account.main_accounts') </strong>
                         </a>
-                    </li>
+                    </li>--}}
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="other_accounts">
@@ -73,6 +73,7 @@
                                             <tr>
                                                 <th>@lang( 'lang_v1.name' )</th>
                                                 <th>@lang( 'lang_v1.account_type' )</th>
+                                                <th>@lang('account.account_code')</th>
                                                 <th>@lang('account.account_number')</th>
                                                 <th>@lang('lang_v1.balance')</th>
                                                 <th>@lang('lang_v1.added_by')</th>
@@ -110,51 +111,8 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-striped table-bordered" id="account_types_table" style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>@lang( 'lang_v1.name' )</th>
-                                            <th>@lang( 'messages.action' )</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($account_types as $account_type)
-                                            <tr class="account_type_{{$account_type->id}}">
-                                                <th>{{$account_type->name}}</th>
-                                                <td>
-                                                    
-                                                    {!! Form::open(['url' => action('AccountTypeController@destroy', $account_type->id), 'method' => 'delete' ]) !!}
-                                                    <button type="button" class="btn btn-primary btn-modal btn-xs" 
-                                                    data-href="{{action('AccountTypeController@edit', $account_type->id)}}"
-                                                    data-container="#account_type_modal">
-                                                    <i class="fa fa-edit"></i> @lang( 'messages.edit' )</button>
+                            <div class="col-md-12" id="account_types_table_dev">
 
-                                                    <button type="button" class="btn btn-danger btn-xs delete_account_type" >
-                                                    <i class="fa fa-trash"></i> @lang( 'messages.delete' )</button>
-                                                    {!! Form::close() !!}
-                                                </td>
-                                            </tr>
-                                            @foreach($account_type->sub_types as $sub_type)
-                                                <tr>
-                                                    <td>&nbsp;&nbsp;-- {{$sub_type->name}}</td>
-                                                    <td>
-                                                        
-
-                                                        {!! Form::open(['url' => action('AccountTypeController@destroy', $sub_type->id), 'method' => 'delete' ]) !!}
-                                                            <button type="button" class="btn btn-primary btn-modal btn-xs" 
-                                                        data-href="{{action('AccountTypeController@edit', $sub_type->id)}}"
-                                                        data-container="#account_type_modal">
-                                                        <i class="fa fa-edit"></i> @lang( 'messages.edit' )</button>
-                                                            <button type="button" class="btn btn-danger btn-xs delete_account_type" >
-                                                            <i class="fa fa-trash"></i> @lang( 'messages.delete' )</button>
-                                                            {!! Form::close() !!}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endforeach
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -212,6 +170,7 @@
         $(document).on('submit', 'form#edit_payment_account_form', function(e){
             e.preventDefault();
             var data = $(this).serialize();
+            var form=$(this);
             $.ajax({
                 method: "POST",
                 url: $(this).attr("action"),
@@ -224,7 +183,10 @@
                         capital_account_table.ajax.reload();
                         other_account_table.ajax.reload();
                     }else{
+                        __enable_submit_button(form.find('button[type="submit"]'));
                         toastr.error(result.msg);
+
+
                     }
                 }
             });
@@ -233,6 +195,7 @@
         $(document).on('submit', 'form#payment_account_form', function(e){
             e.preventDefault();
             var data = $(this).serialize();
+            var form=$(this);
             $.ajax({
                 method: "post",
                 url: $(this).attr("action"),
@@ -245,6 +208,7 @@
                         capital_account_table.ajax.reload();
                         other_account_table.ajax.reload();
                     }else{
+                        __enable_submit_button(form.find('button[type="submit"]'));
                         toastr.error(result.msg);
                     }
                 }
@@ -291,7 +255,8 @@
                             {data: 'name', name: 'accounts.name'},
                             {data: 'parent_account_type_name', name: 'pat.name'},
 
-                            {data: 'account_number', name: 'accounts.account_number'},
+                            {data: 'account_code', name: 'accounts.account_code'},
+                            {data: 'account_number', name: 'account.account_number'},
 
                             {data: 'balance', name: 'balance', searchable: false},
                             {data: 'added_by', name: 'u.first_name'},
@@ -302,7 +267,23 @@
                         }
                     });
 
+        getaccount_typs();
+
+
+
     });
+
+
+    function getaccount_typs(){
+        $.ajax({
+            url: '/account/getaccount_type',
+            dataType: 'html',
+            success: function(result) {
+                $('#account_types_table_dev').html(result);
+            },
+        });
+    }
+
 
     $('#account_status').change( function(){
         other_account_table.ajax.reload();
@@ -399,5 +380,28 @@
             }
         });
     });
+
+    $(document).on('submit','form#account_type_form',function (e){
+        e.preventDefault();
+       var data = $(this).serialize();
+        var form = $(this);
+        console.log($(this).attr("action"));
+        $.ajax({
+            method: "POST",
+            url: $(this).attr("action"),
+            dataType: "json",
+            data: data,
+            success: function(result){
+                if(result.success == true){
+                    $('#account_type_modal').modal('hide');
+                    toastr.success(result.msg);
+                    getaccount_typs();
+                } else {
+                    toastr.error(result.msg);
+                }
+            }
+        });
+    });
+
 </script>
 @endsection

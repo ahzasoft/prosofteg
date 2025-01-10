@@ -122,10 +122,11 @@ class ChartOfAccountsController extends Controller
 
 
 
-        if($account->account_type==0){
-            $html = $html ." <td class='account_code'><span><i class='account-logo fa fa-folder-open'></i> </span></td>  ";
-        }else{
+        if($account->account_type_id==3 || $account->account_type_id==6 ){
             $html = $html ." <td class='account_code'><span><i class='account-logo fa fa-dollar-sign'></i> </span></td>  ";
+           }else{
+            $html = $html ." <td class='account_code'><span><i class='account-logo fa fa-folder-open'></i> </span></td>  ";
+
         }
 
 
@@ -152,7 +153,7 @@ class ChartOfAccountsController extends Controller
     ];
 
           $html=$html."<td>".$account_nature[$account->account_nature]."</td>
-<td style='width: 220px'>".$action_buttons."</td>
+                      <td style='width: 220px'>".$action_buttons."</td>
                       </tr>";
         return $html;
     }
@@ -198,7 +199,7 @@ class ChartOfAccountsController extends Controller
         $live2_accounts=Account::where('business_id',$business_id)
             ->where('parent_id',$account_id)->orderby('chart_order') ->get();
         foreach ($live2_accounts as $live2_account) {
-            if( $live2_account->account_type==0){
+            if( $live2_account->account_type_id==2){
                 $html=$html.'<li>
                                     <details>
                                         <summary>
@@ -213,7 +214,7 @@ class ChartOfAccountsController extends Controller
                                    ';
             }else{
                 $html=$html.'<li>
-                        <span class="account" account_id="' .  $live2_account->id . '">  #'. $live2_account->account_code .' ' .  $live2_account->name . ' </span></li>';
+                        <span class="account fa fa-file" account_id="' .  $live2_account->id . '">  -#'. $live2_account->account_code .' ' .  $live2_account->name . ' </span></li>';
 
             }
         }
@@ -225,10 +226,12 @@ class ChartOfAccountsController extends Controller
     public function addacount(Request $request,$account_id=0){
         $business_id = request()->session()->get('user.business_id');
         $input = $request->only('id', 'account_id');
+        $parent_id=$request->parent_id;
         $account_type=[
             '-1'=>__('messages.please_select'),
-            '0'=>__('chartofaccounts::lang.main_account'),
-            '1'=>__('chartofaccounts::lang.account_chiled'),
+            '2'=>__('chartofaccounts::lang.main_account'),
+            '3'=>__('chartofaccounts::lang.account_chiled'),
+            '6'=>__('chartofaccounts::lang.account_save'),
 
         ];
         $main_accounts=Account::where('business_id',$business_id)
@@ -239,7 +242,7 @@ class ChartOfAccountsController extends Controller
             ->pluck('full_name','id');
 
         $accounts=Account::where('account_type',0)->where('business_id',$business_id)
-                  ->where('account_type_id',0)
+                  ->whereIN('account_type_id',[1,2])
             ->select('id',
                 DB::raw('CONCAT(COALESCE(account_code, ""), "- ", COALESCE(name, "")) as full_name'))
             ->get()
@@ -249,16 +252,30 @@ class ChartOfAccountsController extends Controller
 
         $account_id=$account_id?$account_id:$input['account_id'];
 
-
+        $account_code="";
         if(!empty($account_id)){
             $account=Account::where('id',$account_id)
                            ->first();
         }else{
             $account=new Account();
+            $account->parent_id=$parent_id;
+            $account_code=$this->getnextaccountcode($parent_id);
         }
 
 
-        return view('chartofaccounts::accounts.create',compact( ['main_accounts','accounts','account','account_type']));
+        return view('chartofaccounts::accounts.create',compact( ['main_accounts','accounts','account','account_type','account_code']));
+    }
+
+
+    public function getnextaccountcode($parent_id)
+    {
+        $account=Account::where('id',$parent_id)->whereIN('account_type_id',[1,2])
+            ->first();
+        $account_code="";
+        if(!empty($account)){
+            $account_code=$account->account_code;
+        }
+        return $account_code;
     }
 
     public function saveacount(Request $request){
@@ -304,6 +321,7 @@ class ChartOfAccountsController extends Controller
              'note'=>$request->notes,
              'chart_order'=>$request->parent_id?$parint_account->chart_order+1:1,
              'created_by'=>auth()->user()->id,
+             'account_type_id'=>$request->account_type_id?$request->account_type_id:0,
          ];
          $chartofaccount=Account::updateOrCreate(
              [

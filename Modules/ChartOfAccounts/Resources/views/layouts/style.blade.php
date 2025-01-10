@@ -8,10 +8,10 @@
         margin: auto;
         border-top-color: #958b7c;
     }
-.tree{
+.tree-table>.tree{
     font-size: 17px;
 }
-  .tree ul{
+.tree-table>.tree ul{
         list-style: none;
         line-height:2.6em;
     }
@@ -144,5 +144,9 @@ summary ul{
     text-align: center;
     font-size: 30px;
     color: #59665b;
+}
+
+.account{
+    font-weight: 600 !important;
 }
 </style>

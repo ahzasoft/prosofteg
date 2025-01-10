@@ -1,6 +1,6 @@
 <?php
 return [
-    'chartofaccounts'=>'شجرة الحسابات',
+    'chartofaccounts'=>'  الحسابات  ',
     'chart_view'=>'دليل الحسابات',
     'cost-centers'=>'مراكز التكلفة',
     'journals'=>'القيود اليومية',
@@ -16,6 +16,7 @@ return [
     'main_account'=>'حساب رئيسي',
     'account_type'=>'نوع الحساب',
     'account_chiled'=>'حساب فرعي ',
+    'account_save'=>'حساب خزينة(يستخدم في الدفع و التحصيل) ',
     'account_main'=>'حساب رئيسي',
     'account_code'=>'كود الحساب',
     'code_found'=>'عفوا هذا الكود موجود قبل ذلك',

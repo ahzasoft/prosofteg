@@ -15,25 +15,21 @@
             </div>
 
              <div class="form-group">
-                {!! Form::label('account_number', __( 'account.account_number' ) .":*") !!}
-                {!! Form::text('account_number', $account->account_number, ['class' => 'form-control', 'required','placeholder' => __( 'account.account_number' ) ]); !!}
+                {!! Form::label('account_code', __( 'account.account_code' ) .":*") !!}
+                {!! Form::text('account_code', $account->account_code, ['class' => 'form-control', 'required' ]); !!}
             </div>
 
-            <div class="form-group">
-                {!! Form::label('account_type_id', __( 'account.account_type' ) .":") !!}
-                <select name="account_type_id" class="form-control select2">
-                    <option>@lang('messages.please_select')</option>
-                    @foreach($account_types as $account_type)
-                        <optgroup label="{{$account_type->name}}">
-                            <option value="{{$account_type->id}}" @if($account->account_type_id == $account_type->id) selected @endif >{{$account_type->name}}</option>
-                            @foreach($account_type->sub_types as $sub_type)
-                                <option value="{{$sub_type->id}}" @if($account->account_type_id == $sub_type->id) selected @endif >{{$sub_type->name}}</option>
-                            @endforeach
-                        </optgroup>
-                    @endforeach
-                </select>
-            </div>
 
+                <div class="form-group">
+                    {!! Form::label('parent_id', __('chartofaccounts::lang.themain_account') ) !!}
+                    {!! Form::select('parent_id', $accounts,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'parent_id']); !!}
+
+                </div>
+
+        <div class="form-group">
+            {!! Form::label('account_number', __( 'account.account_number' ) .":") !!}
+            {!! Form::text('account_number', $account->account_number, ['class' => 'form-control' ]); !!}
+        </div>
             <div class="form-group">
                 {!! Form::label('note', __( 'brand.note' )) !!}
                 {!! Form::textarea('note', $account->note, ['class' => 'form-control', 'placeholder' => __( 'brand.note' ), 'rows' => 4]); !!}

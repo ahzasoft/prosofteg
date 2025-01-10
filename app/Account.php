@@ -25,7 +25,8 @@ class Account extends Model
     
     public static function forDropdown($business_id, $prepend_none, $closed = false, $show_balance = false)
     {
-        $query = Account::where('business_id', $business_id);
+        $query = Account::where('business_id', $business_id)
+                        ->whereIN('account_type_id',[6]);
 
         $can_access_account = auth()->user()->can('account.access');
         if ($can_access_account && $show_balance) {

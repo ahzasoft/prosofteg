@@ -3,7 +3,7 @@ return [
 "account" => "الحسابات",
 "manage_your_account" => "ادارة الحسابات",
 "all_accounts" => "جميع الحسابات",
-"account_number" => "رقم حساب",
+"account_number" => "رقم الحساب",
 "add_account" => "إضافة حساب",
 "account_created_success" => "تم انشاء الحساب بنجاح",
 "account_updated_success" => "تم تحديث الحساب بنجاح",
@@ -52,4 +52,9 @@ return [
 "link_account" => "ربط بحساب",
 "account_linked_success" => "تم ربط الحساب بنجاح",
 "view_details" => "عرض التفاصيل",
+"main_accounts"=>"الحسابات الرئيسية",
+"account_nature"=>"طبيعه الحساب",
+"account_code"=>"كود الحساب",
+"code_found"=>"عفوا هذا الكود موجود من قبل",
+
 ];

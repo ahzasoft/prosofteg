@@ -64,8 +64,8 @@
                 </div>
                 <div class="col-md-6">
                                    <div class="form-group">
-                                       {!! Form::label('account_type', __( 'chartofaccounts::lang.account_type' ) ) !!}
-                                       {!! Form::select('account_type', $account_type, $account->account_type, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'account_type','require',$disabled ]); !!}
+                                       {!! Form::label('account_type_id', __( 'chartofaccounts::lang.account_type' ) ) !!}
+                                       {!! Form::select('account_type_id', $account_type, $account->account_type_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'account_type_id','require',$disabled ]); !!}
 
                                    </div>
                                </div>

@@ -31,8 +31,7 @@ class AccountTypeController extends Controller
         $business_id = session()->get('user.business_id');
 
         $account_types = AccountType::where('business_id', $business_id)
-                                     ->whereNull('parent_account_type_id')
-                                     ->get();
+                                      ->get();
 
         return view('account_types.create')
                 ->with(compact('account_types'));
@@ -51,10 +50,14 @@ class AccountTypeController extends Controller
         }
 
         try {
-            $input = $request->only(['name', 'parent_account_type_id']);
+            $input = $request->only(['name', 'parent_account_type_id','account_nature','account_number','note']);
             $input['business_id'] = $request->session()->get('user.business_id');
-
+            $input['created_by'] =$request->session()->get('user.id');
+          if(empty($input['parent_account_type_id'])){
+              $input['parent_account_type_id']=0;
+          }
             AccountType::create($input);
+
             $output = ['success' => true,
                             'msg' => __("lang_v1.added_success")
                         ];
@@ -66,7 +69,7 @@ class AccountTypeController extends Controller
                         ];
         }
 
-        return redirect()->back()->with('status', $output);
+        return $output;
     }
 
     /**

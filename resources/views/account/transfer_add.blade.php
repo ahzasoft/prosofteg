@@ -33,7 +33,7 @@
                         {!! Form::select('to_account', $accounts, $data['account_to'], ['class' => 'form-control', 'required' ]); !!}
                     </div>
                 </div>
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-6 col-sm-12 hidden">
                     <div class="form-group" style="max-width: 100px;">
                         {!! Form::label('amount_to', __( 'sale.amount' ) .":*") !!}
                         {!! Form::text('amount_to',number_format($data['amount_to'],2,'.',''), ['class' => 'form-control input_number', 'required','placeholder' => __( 'sale.amount' ) ]); !!}

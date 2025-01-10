@@ -845,7 +845,7 @@ return [
 "uploaded_by" => "تم الرفع بواسطة",
 "account_types" => "أنواع الحسابات",
 "add_account_type" => "إضافة نوع الحساب",
-"parent_account_type" => "نوع الحساب الرئيسي",
+"parent_account_type" => "الحساب الرئيسي",
 "edit_account_type" => "تعديل نوع الحساب",
 "account_type" => "نوع الحساب",
 "account_sub_type" => "نوع الحساب الفرعي",

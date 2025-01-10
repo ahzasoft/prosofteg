@@ -573,7 +573,8 @@ class AdminSidebarMenu
              }
          }
             //Accounts dropdown 50 account.access
-         if(isset($package->package_details['account_module'])) {
+         //if(isset($package->package_details['account_module']))
+         if(false) {
              if (auth()->user()->can('account.access') && in_array('account', $enabled_modules)) {
                  $menu->dropdown(
                      __('lang_v1.payment_accounts'),
