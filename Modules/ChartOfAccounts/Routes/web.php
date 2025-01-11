@@ -26,4 +26,6 @@ Route::middleware(['web',  'SetSessionData', 'auth', 'language', 'timezone', 'Ad
     Route::get('/getaccount','ChartOfAccountsController@getaccount');
     Route::get('/deleteaccount/{account_id?}','ChartOfAccountsController@deleteaccount');
 
+    Route::get('/getaccountcode/{id}/{account_id?}','ChartOfAccountsController@getnextaccountcode');
+
 });

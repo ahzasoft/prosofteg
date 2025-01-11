@@ -204,6 +204,20 @@
             });
         });
 
+
+        $(document).on('change','#parent_id',function(){
+            $.ajax({
+                url:"/chartofaccounts/getaccountcode/"+$('#parent_id').val()+"/"+$('#account_id').val(),
+                method:'GET',
+
+                success: function(result) {
+                    $('#account_code').val(result);
+                }
+
+            });
+
+        });
+
         $(document).on('click', '.btn-modal-delete', function(e) {
             e.preventDefault();
             var account= $('#selectedaccount').text();

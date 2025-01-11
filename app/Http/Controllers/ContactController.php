@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Business;
 use App\BusinessLocation;
 use App\Contact;
@@ -559,9 +560,10 @@ class ContactController extends Controller
         //Added check because $users is of no use if enable_contact_assign if false
         $users = config('constants.enable_contact_assign') ? User::forDropdown($business_id, false, false, false, true) : [];
 
-
+          $accounts=Account::forDropdownmainaccount($business_id,true);
         return view('contact.create')
-            ->with(compact('types', 'customer_groups', 'selected_type', 'module_form_parts', 'users'));
+            ->with(compact('types', 'customer_groups', 'selected_type',
+                'module_form_parts', 'users','accounts'));
     }
 
     /**
@@ -590,7 +592,9 @@ class ContactController extends Controller
                 'address_line_2', 'customer_group_id', 'zip_code', 'contact_id', 'custom_field1',
                 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6',
                 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'dob',
-                'shipping_custom_field_details', 'assigned_to_users','commercial_register' ]);
+                'shipping_custom_field_details', 'assigned_to_users','commercial_register',
+                'account_id'
+                 ]);
 
             $name_array = [];
 
@@ -629,8 +633,38 @@ class ContactController extends Controller
 
             $input['credit_limit'] = $request->input('credit_limit') != '' ? $this->commonUtil->num_uf($request->input('credit_limit')) : null;
             $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
-            
+
+            if(!empty($input['account_id'])){
+                $code_exit=Account::where('business_id',$business_id)->where('account_code', $request->contact_id)
+                    ->count();
+                if($code_exit>0){
+                    $output = ['success' => false,
+                        'msg' => __("account.code_found")
+                    ];
+
+                    return $output;
+                }
+                $data=[
+                    'business_id'=>$business_id,
+                    'account_type_id'=>4,// Account type for contacts (4)
+                    'account_code' => $request->contact_id,
+                    'parent_id' => $request->account_id,
+                    'name' => $request->first_name,
+                    'account_nature'=>-1,
+                    'account_type'=>1,
+                    'note'=>$request->notes,
+                    'created_by'=>auth()->user()->id,
+                 ];
+
+            }
+
+
             DB::beginTransaction();
+
+            if(!empty($input['account_id'])){
+                $chartofaccount=Account::create($data);
+            }
+
             $output = $this->contactUtil->createNewContact($input);
 
 

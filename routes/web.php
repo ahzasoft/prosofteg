@@ -433,6 +433,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
         Route::get('/getaccount_type','AccountController@account_types');
 
 
+
     });
 
     Route::resource('account-types', 'AccountTypeController');

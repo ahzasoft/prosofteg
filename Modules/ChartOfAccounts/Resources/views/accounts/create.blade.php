@@ -2,7 +2,7 @@
     <div class="modal-content">
 
         {!! Form::open(['url' => action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@saveacount'), 'method' => 'post','id' => 'add_chart_account' ]) !!}
-        <input type="hidden" value="{{$account->id}}" class="form-control" name="account_id">
+        <input type="hidden" value="{{$account->id}}" class="form-control" name="account_id" id="account_id">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>

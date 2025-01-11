@@ -3,6 +3,7 @@
 namespace Modules\ChartOfAccounts\Http\Controllers;
 
 use App\Account;
+use App\Utils\ChartofAccountUtil;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -256,10 +257,11 @@ class ChartOfAccountsController extends Controller
         if(!empty($account_id)){
             $account=Account::where('id',$account_id)
                            ->first();
+
         }else{
             $account=new Account();
             $account->parent_id=$parent_id;
-            $account_code=$this->getnextaccountcode($parent_id);
+            $account->account_code=$this->getnextaccountcode($parent_id);
         }
 
 
@@ -267,15 +269,30 @@ class ChartOfAccountsController extends Controller
     }
 
 
-    public function getnextaccountcode($parent_id)
+    public function getnextaccountcode($parent_id,$account_id='')
     {
-        $account=Account::where('id',$parent_id)->whereIN('account_type_id',[1,2])
-            ->first();
-        $account_code="";
-        if(!empty($account)){
-            $account_code=$account->account_code;
+
+        if(!empty($account_id)){
+            $account=Account::where('id',$account_id)->first();
+            return $account->account_code;
+        }else{
+        $parent_account=Account::where('id',$parent_id)->first();
+        $parent_account_code="";
+        if(!empty($parent_account)){
+            $parent_account_code=$parent_account->account_code;
         }
-        return $account_code;
+
+        $last_account=Account::where('parent_id',$parent_id)->orderBy('id', 'desc')->first();
+        $last_code=0;
+        if(!empty($last_account)){
+            $last_code=$last_account->account_code;
+        }
+
+        $account_code=str_replace($parent_account_code,'',$last_code+1);
+
+        $count =$parent_account_code. str_pad($account_code, 2, '0', STR_PAD_LEFT);
+        return $count;
+        }
     }
 
     public function saveacount(Request $request){
@@ -312,7 +329,6 @@ class ChartOfAccountsController extends Controller
 
          $data=[
              'business_id'=>$business_id,
-             'account_type_id'=>0,
              'account_code' => $request->account_code,
              'parent_id' => $request->parent_id ? $request->parent_id : 0,
              'name' => $request->name,

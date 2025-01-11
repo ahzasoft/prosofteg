@@ -71,6 +71,22 @@ class Account extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
+
+
+    public static function forDropdownmainaccount($business_id, $prepend_none, $closed = false)
+    {
+        $accounts=Account::where('account_type',0)->where('business_id',$business_id)
+            ->whereIN('account_type_id',[1,2])
+            ->select('id',
+                \Illuminate\Support\Facades\DB::raw('CONCAT(COALESCE(account_code, ""), "- ", COALESCE(name, "")) as full_name'))
+            ->get()
+            ->pluck('full_name','id');
+
+        if ($prepend_none) {
+            $accounts->prepend(__('lang_v1.none'), '');
+        }
+        return $accounts;
+    }
     public function scopeNotClosed($query)
     {
         return $query->where('is_closed', 0);

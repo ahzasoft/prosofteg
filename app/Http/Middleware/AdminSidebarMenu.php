@@ -574,7 +574,8 @@ class AdminSidebarMenu
          }
             //Accounts dropdown 50 account.access
          //if(isset($package->package_details['account_module']))
-         if(false) {
+         //Use chart of account module
+       /*  if(isset($package->package_details['account_module'])) {
              if (auth()->user()->can('account.access') && in_array('account', $enabled_modules)) {
                  $menu->dropdown(
                      __('lang_v1.payment_accounts'),
@@ -614,7 +615,7 @@ class AdminSidebarMenu
                      ['icon' => 'fa fas fa-money-check-alt']
                  )->order(50);
              }
-         }
+         }*/
             //Reports dropdown 55
 
              if (auth()->user()->can('purchase_n_sell_report.view') || auth()->user()->can('contacts_report.view')
