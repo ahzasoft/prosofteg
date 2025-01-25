@@ -124,8 +124,6 @@ class AccountController extends Controller
                                 <a href="{{action(\'AccountController@show\',[$id])}}" class="btn btn-warning btn-xs"><i class="fa fa-book"></i> @lang("account.account_book")</a>&nbsp;
                               @if($account_type_id==6)
                                     @if($is_closed == 0)
-                                    <button data-href="{{action(\'AccountController@getFundTransfer\',[$id])}}" class="btn btn-xs btn-info btn-modal" data-container=".view_modal"><i class="fa fa-exchange"></i> @lang("account.fund_transfer")</button>
-    
                                     <button data-href="{{action(\'AccountController@getDeposit\',[$id])}}" class="btn btn-xs btn-success btn-modal" data-container=".view_modal"><i class="fas fa-money-bill-alt"></i> @lang("account.deposit")</button>
     
                                     <button data-url="{{action(\'AccountController@close\',[$id])}}" class="btn btn-xs btn-danger close_account"><i class="fa fa-power-off"></i> @lang("messages.close")</button>
@@ -820,6 +818,7 @@ $accounts = AccountTransaction::join('accounts as A','account_transactions.accou
             $debit='مدين';
             if (!empty($amount)) {
                 $debit_data = [
+                    'business_id'=>$business_id,
                     'amount' => $amount,
                     'account_id' => $from,
                     'type' => 'debit',
@@ -834,6 +833,7 @@ $accounts = AccountTransaction::join('accounts as A','account_transactions.accou
                 $debit = AccountTransaction::createAccountTransaction($debit_data);
 
                 $credit_data = [
+                    'business_id'=>$business_id,
                     'amount' => $amount,
                     'account_id' => $to,
                     'type' => 'credit',
@@ -1582,7 +1582,7 @@ $accounts = AccountTransaction::join('accounts as A','account_transactions.accou
                 $debit_data = [
                     'amount' => $amount_from,
                     'account_id' => $from,
-                    'type' => 'debit',
+                    'type' => 'debit',// من
                     'sub_type' => 'fund_transfer',
                     'created_by' => session()->get('user.id'),
                     'note' => $note,
@@ -1596,7 +1596,7 @@ $accounts = AccountTransaction::join('accounts as A','account_transactions.accou
                 $credit_data = [
                     'amount' => $amount_to,
                     'account_id' => $to,
-                    'type' => 'credit',
+                    'type' => 'credit',// إلي
                     'sub_type' => 'fund_transfer',
                     'created_by' => session()->get('user.id'),
                     'note' => $note,
@@ -1621,6 +1621,7 @@ $accounts = AccountTransaction::join('accounts as A','account_transactions.accou
                 'msg' => __("account.fund_transfered_success")
             ];
             return $output;
+
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());

@@ -27,8 +27,8 @@
         @if(auth()->user()->can('supplier.create') || auth()->user()->can('customer.create') || auth()->user()->can('supplier.view_own') || auth()->user()->can('customer.view_own'))
             @slot('tool')
                 <div class="box-tools">
-                    <button type="button" class="btn btn-block btn-primary btn-modal" 
-                    data-href="{{action('ContactController@create', ['type' => $type])}}" 
+                    <button type="button" class="btn btn-block btn-primary btn-modal"
+                    data-href="{{action('ContactController@create', ['type' => $type])}}"
                     data-container=".contact_modal">
                     <i class="fa fa-plus"></i> @lang('messages.add')</button>
                 </div>
@@ -40,7 +40,7 @@
                     <tr>
                         <th>@lang('messages.action')</th>
                         <th>@lang('lang_v1.contact_id')</th>
-                        @if($type == 'supplier') 
+                        @if($type == 'supplier')
                             <th>@lang('business.business_name')</th>
                             <th>@lang('contact.name')</th>
                             <th>@lang('business.email')</th>
@@ -147,10 +147,10 @@
         @endif
     @endcomponent
 
-    <div class="modal fade contact_modal" tabindex="-1" role="dialog" 
+    <div class="modal fade contact_modal" tabindex="-1" role="dialog"
     	aria-labelledby="gridSystemModalLabel">
     </div>
-    <div class="modal fade pay_contact_due_modal" tabindex="-1" role="dialog" 
+    <div class="modal fade pay_contact_due_modal" tabindex="-1" role="dialog"
         aria-labelledby="gridSystemModalLabel">
     </div>
 
@@ -158,6 +158,20 @@
 <!-- /.content -->
 @stop
 @section('javascript')
+    <script type="text/javascript">
+        $(document).on('change','#parent_id',function(){
+            $.ajax({
+                url:"/chartofaccounts/getaccountcode/"+$('#parent_id').val(),
+                method:'GET',
+                success: function(result) {
+                    $('#contact_id').val(result);
+                }
+
+            });
+
+        });
+    </script>
+
 @if(!empty($api_key))
 <script>
   // This example adds a search box to a map, using the Google Place Autocomplete
@@ -248,12 +262,13 @@
   }
 
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{$api_key}}&libraries=places"
-     async defer></script>
+
 <script type="text/javascript">
     $(document).on('shown.bs.modal', '.contact_modal', function(e) {
         initAutocomplete();
     });
+
+
 </script>
 @endif
 @endsection

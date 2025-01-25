@@ -224,6 +224,10 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\laragon\www\prosofteg\Modules\Manufacturing\Entities" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\laragon\www\prosofteg\Modules\ChartOfAccounts\Resources\views\journal\payment_receipt" />
+      <recent name="G:\laragon\www\prosofteg\Modules\ChartOfAccounts\Resources\views\journal\cash_receipt" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">

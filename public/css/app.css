@@ -953,6 +953,11 @@ table.table-text-center td, table.table-text-center th{
   content: "\2192 ";
 }
 
+/*.treeview-menu >.active {
+    background-color: #ADAAB7;
+    border-radius: 10px 0px 0px 10px;
+}*/
+
 @media only screen and (max-width: 600px) {
   .pos-form-actions{
     position: absolute;

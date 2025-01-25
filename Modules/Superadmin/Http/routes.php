@@ -59,5 +59,7 @@ Route::get('/page/{slug}', 'Modules\Superadmin\Http\Controllers\PageController@s
 
 Route::group(['middleware' => ['web', 'language', 'AdminSidebarMenu', 'superadmin'], 'prefix' => 'superadmin', 'namespace' => 'Modules\Superadmin\Http\Controllers'], function () {
     /* superadmin/changebusiness */
+
     Route::get('/changebusiness', 'BusinessController@changebusiness');
+    Route::get('/transactiontype', 'BusinessController@transactiontype');
 });

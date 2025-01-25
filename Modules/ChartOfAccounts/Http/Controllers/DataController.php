@@ -34,24 +34,22 @@ class DataController extends Controller
                  $menu->dropdown(
                   __('chartofaccounts::lang.chartofaccounts'),
                   function ($sub) {
-
-
                       $sub->url(
                           action('AccountController@index'),
                           __('account.list_accounts'),
                           ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
                       );
-                                      $sub->url(
-                                              action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@chart_view'),
-                                              __('chartofaccounts::lang.chart_view'),
-                                              ['icon' => 'fa fas fa-address-book', 'active' => request()->segment(2) == 'partners']
-                                            );
+                       $sub->url(
+                          action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@chart_view'),
+                          __('chartofaccounts::lang.chart_view'),
+                          ['icon' => 'fa fas fa-address-book', 'active' => request()->segment(2) == 'chart_view']
+                        );
 
-                                      $sub->url(
-                                              action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@index'),
-                                              __('chartofaccounts::lang.cost-centers'),
-                                              ['icon' => 'fa fas fa-user', 'active' => request()->segment(2) == 'assets']
-                                           );
+                      $sub->url(
+                              action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@index'),
+                              __('chartofaccounts::lang.cost-centers'),
+                              ['icon' => 'fa fas fa-user', 'active' => request()->segment(2) == 'assets']
+                           );
                       $sub->url(
                           action('AccountReportsController@balanceSheet'),
                           __('account.balance_sheet'),
@@ -63,11 +61,7 @@ class DataController extends Controller
                           ['icon' => 'fa fas fa-balance-scale', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'trial-balance']
                       );
 
-                      $sub->url(
-                          action('AccountController@cashFlow'),
-                          __('lang_v1.cash_flow'),
-                          ['icon' => 'fa fas fa-exchange-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'cash-flow']
-                      );
+
 
                       $sub->url(
                           action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@index'),
@@ -92,6 +86,47 @@ class DataController extends Controller
                                  },
                     ['icon' => 'fa fas  fa-users']
                   )->order(47);
+
+
+                 /* New dropdown menu */
+                     $menu->dropdown(
+                         __('chartofaccounts::lang.financial_movement'),
+                         function ($sub){
+
+                             $sub->url(
+                                 action('AccountController@cashFlow'),
+                                 __('lang_v1.cash_flow'),
+                                 [ 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'cash-flow']
+                             );
+
+                             $sub->url(
+                                 action('\Modules\ChartOfAccounts\Http\Controllers\JournalController@cash_receipt'),
+                                 __('chartofaccounts::lang.cash_receipt'),
+                                 ['active' => request()->segment(1) == 'account' && request()->segment(2) == 'cash_receipt']
+                             );
+
+
+                             $sub->url(
+                                 action('AccountController@index'),
+                                 __('chartofaccounts::lang.payment_receipt'),
+                                 ['active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment_receipt']
+                             );
+
+                             $sub->url(
+                                 action('AccountController@index'),
+                                 __('chartofaccounts::lang.Journal_entry'),
+                                 ['active' => request()->segment(1) == 'account' && request()->segment(2) == 'Journal_entry']
+                             );
+
+
+                         },
+
+
+
+
+                         ['icon'=>'fa fas fa-exchange-alt']
+                     )->order(48);
+
               });
             }
         }

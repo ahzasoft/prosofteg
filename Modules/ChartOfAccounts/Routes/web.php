@@ -28,4 +28,25 @@ Route::middleware(['web',  'SetSessionData', 'auth', 'language', 'timezone', 'Ad
 
     Route::get('/getaccountcode/{id}/{account_id?}','ChartOfAccountsController@getnextaccountcode');
 
+    /* JournalController */
+
+
+
+
+});
+
+Route::middleware(['web',  'SetSessionData', 'auth', 'language', 'timezone', 'AdminSidebarMenu'])->prefix('journal')->group(function() {
+
+
+    /*cash_receipt*/
+    Route::get( '/get_cash_receipt','JournalController@get_cash_receipt');
+    Route::get( '/cash_receipt','JournalController@cash_receipt');
+
+    Route::get( '/cash_receipt_add','JournalController@cash_receipt_add');
+    Route::get( '/cash_receipt_delete/{id}','JournalController@cash_receipt_delete');
+    Route::post( '/cash_receipt_save','JournalController@cash_receipt_save');
+    Route::get( '/get_account_type','JournalController@get_account_type');
+
+
+    Route::resource( '/','JournalController');
 });

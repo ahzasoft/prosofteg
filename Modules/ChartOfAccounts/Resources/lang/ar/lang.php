@@ -23,6 +23,15 @@ return [
     'select_account_type'=>'برجاء إختيار نوع الحساب   !!!',
     'added_success'=>'تمت إضافة الحساب بنجاح ',
     'deleted_success'=>'تمت حذف الحساب بنجاح ',
-
+    "financial_movement"=>'الحركات المالية',
+    "CASH RECEIPTS"=>"سند قبض",
+    "cash_receipt"=>"سند قبض",
+    "add_cash_receipt"=>" إضافة سند قبض",
+    "edit_cash_receipt"=>" تعديل سند قبض",
+    'save_account'=>'حساب الخزينة',
+    'chiled_account'=>'الحساب الفرعي',
+    'receipt_amount'=>'المبلغ',
+    "payment_receipt"=>"سند صرف",
+    "Journal_entry"=>"قيد يومية",
 
 ];

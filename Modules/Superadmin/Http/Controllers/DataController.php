@@ -167,6 +167,13 @@ class DataController extends Controller
                         'Open Log files',
                         ['icon' => 'fa fas fa-envelope', 'active' => request()->segment(1) == 'superadmin' && request()->segment(2) == 'openlog']
                     );
+
+                    $sub->url(
+                        action('\Modules\Superadmin\Http\Controllers\BusinessController@transactiontype'),
+                        'Open Log files',
+                        ['icon' => 'fa fas fa-envelope', 'active' => request()->segment(1) == 'superadmin' && request()->segment(2) == 'openlog']
+                    );
+
                 },
                 ['icon' => 'fa fas fa-users-cog']
                 )->order(1);

@@ -149,4 +149,9 @@ summary ul{
 .account{
     font-weight: 600 !important;
 }
+
+.account-link{
+    text-align: left;
+    font-weight: 600 !important;
+}
 </style>

@@ -62,7 +62,16 @@
                                             data-container=".account_model"
                                             data-href="{{action('AccountController@create')}}">
                                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+
+                                        <button data-href="{{action('AccountController@getFundTransfer',[0])}}"
+                                                class="btn  btn-danger pull-right btn-modal mr-8 ml-5"
+                                                style="margin-left: 10px;"
+                                                data-container=".view_modal">
+                                            <i class="fa fa-exchange"></i>
+                                            @lang("account.fund_transfer")</button>
                                     </div>
+
+
                                 @endcomponent
                             </div>
                             <div class="col-sm-12">

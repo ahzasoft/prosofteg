@@ -85,6 +85,7 @@ class Media extends Model
             return null;
         }
 
+
         if ($request->hasFile($file_name)) {
             $files = $request->file($file_name);
             $uploaded_files = [];

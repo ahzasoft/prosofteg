@@ -13,6 +13,7 @@ use App\Contact;
 use App\Discount;
 use App\InvoiceLayout;
 use App\InvoiceScheme;
+use App\Models\TransactionType;
 use App\Printer;
 use App\Product;
 use App\ProductVariation;
@@ -657,4 +658,9 @@ class BusinessController extends BaseController
         return view('superadmin::business.changebusiness',['business'=>$business]);
     }
 
+    public function transactiontype()
+    {
+        $data=TransactionType::get();
+        return view('superadmin::business.transactiontype',['data'=>$data]);
+    }
 }

@@ -5699,6 +5699,7 @@ class TransactionUtil extends Util
         if (!array_key_exists($inputs['method'], $payment_types)) {
             throw new \Exception("Payment method not found");
         }
+
         $inputs['paid_on'] = $request->input('paid_on', \Carbon::now()->toDateTimeString());
         if ($format_data) {
             $inputs['paid_on'] = $this->uf_date($inputs['paid_on'], true);
