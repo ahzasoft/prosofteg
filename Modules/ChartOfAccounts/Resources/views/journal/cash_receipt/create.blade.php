@@ -180,8 +180,10 @@
          },
          success: function(result) {
              if (result.success == true) {
-                 __enable_submit_button(form.find('button[type="submit"]'));
-                 toastr.success(result.msg);
+               toastr.success(result.msg);
+                 setTimeout(function() {
+                     window.location = '/journal/cash_receipt';
+                 }, 4000);
              } else {
                  toastr.error(result.msg);
                  __enable_submit_button(form.find('button[type="submit"]'));
