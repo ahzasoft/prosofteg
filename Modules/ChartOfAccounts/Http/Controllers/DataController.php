@@ -102,20 +102,20 @@ class DataController extends Controller
                              $sub->url(
                                  action('\Modules\ChartOfAccounts\Http\Controllers\JournalController@cash_receipt'),
                                  __('chartofaccounts::lang.cash_receipt'),
-                                 ['active' => request()->segment(1) == 'account' && request()->segment(2) == 'cash_receipt']
+                                 ['active' => request()->segment(1) == 'journal' && request()->segment(2) == 'cash_receipt']
                              );
 
 
                              $sub->url(
                                  action('AccountController@index'),
                                  __('chartofaccounts::lang.payment_receipt'),
-                                 ['active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment_receipt']
+                                 ['active' => request()->segment(1) == 'account' ]
                              );
 
                              $sub->url(
                                  action('AccountController@index'),
                                  __('chartofaccounts::lang.Journal_entry'),
-                                 ['active' => request()->segment(1) == 'account' && request()->segment(2) == 'Journal_entry']
+                                 ['active' => request()->segment(1) == 'account' ]
                              );
 
 
