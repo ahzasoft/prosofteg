@@ -29,15 +29,15 @@
                                 }
 
                                 ?>
-                                <div class="col-md-2">
+                                <div class="col-md-2 hidden">
                                     <div class="form-group">
                                         {!! Form::label('account_code','كود المستند:') !!}
-                                        {!! Form::text('account_code', $account->account_code, ['class' => 'form-control','id'=>'account_code' ,  'required' ]); !!}
+                                        {!! Form::text('account_code', $account->account_code, ['class' => 'form-control','id'=>'account_code' ]); !!}
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
+                                <div class="col-lg-3 hidden">
+                                    <div class="form-group ">
                                         {!! Form::label('account_type','جهة التعامل : ' ) !!}
                                         <select class="form-control select2" id="account_type">
                                             <option value="1">حساب فرعي</option>

@@ -102,7 +102,12 @@ class JournalController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $account=new Account();
-        $accounts=Account::pluck('name','id');
+        // الحسابات الفرعية
+        $accounts=Account::where('accounts.business_id',$business_id)
+                    ->join('account_types','account_types.id','accounts.account_type_id')
+                    ->whereIn('account_types.id',[3,4,5])-> pluck('accounts.name','accounts.id');
+
+        //حسابات الخزن
         $save_account=Account::where('business_id',$business_id)
                    ->where('account_type_id',6)->pluck('name','id');
 
