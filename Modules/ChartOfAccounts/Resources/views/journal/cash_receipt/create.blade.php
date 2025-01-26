@@ -36,23 +36,38 @@
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
-                                <div class="col-lg-3 hidden">
+                                <div class="col-lg-3 ">
                                     <div class="form-group ">
                                         {!! Form::label('account_type','جهة التعامل : ' ) !!}
-                                        <select class="form-control select2" id="account_type">
-                                            <option value="1">حساب فرعي</option>
-                                            <option value="2"> حسابات العملاء</option>
-                                            <option value="3">حسابات الموردين</option>
+                                        <select class="form-control select2" id="account_type" name="account_type">
+                                            <option value="sub_account">حساب فرعي</option>
+                                            <option value="customer"> حسابات العملاء</option>
+                                            <option value="supplier">حسابات الموردين</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3" id="sub_account_dev">
                                     <div class="form-group">
-                                        {!! Form::label('debit_account', __('chartofaccounts::lang.chiled_account') ) !!}
-                                        {!! Form::select('debit_account', $accounts,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'credit_account' ]); !!}
+                                        {!! Form::label('sub_account', __('chartofaccounts::lang.chiled_account') ) !!}
+                                        {!! Form::select('sub_account', $accounts,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'sub_account' ]); !!}
                                     </div>
                                 </div>
+                                <div class="col-md-3  hidden" id="customer_dev">
+                                    <div class="form-group">
+                                        {!! Form::label('customer', __('chartofaccounts::lang.customer_account') ) !!}
+                                        {!! Form::select('customer', $customers,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'customer' ]); !!}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3  hidden" id="supplier_dev">
+                                    <div class="form-group">
+                                        {!! Form::label('supplier', __('chartofaccounts::lang.supplier_account') ) !!}
+                                        {!! Form::select('supplier', $suppliers,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'supplier' ]); !!}
+                                    </div>
+                                </div>
+
+
 
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -150,17 +165,20 @@
 
  $(document).on('change','#account_type',function (){
      var account_type=$('#account_type').val();
-     $.ajax({
-         method: "GET",
-         url: '/journal/get_account_type',
-         data:{
-             type:account_type,
-            },
-         success: function(result) {
+     $('#sub_account_dev').addClass('hidden');
+     $('#customer_dev').addClass('hidden');
+     $('#supplier_dev').addClass('hidden');
 
-         }
+     if(account_type==="sub_account"){
+         $('#sub_account_dev').removeClass('hidden');
+     }
+     if(account_type==="customer") {
+         $('#customer_dev').removeClass('hidden');
+     }
+     if(account_type==="supplier") {
+         $('#supplier_dev').removeClass('hidden');
+     }
 
-     });
  });
 
  $(document).on('submit', 'form#cash_receipt_save', function(e) {

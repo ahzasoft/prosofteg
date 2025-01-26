@@ -560,10 +560,12 @@ class ContactController extends Controller
         //Added check because $users is of no use if enable_contact_assign if false
         $users = config('constants.enable_contact_assign') ? User::forDropdown($business_id, false, false, false, true) : [];
 
-          $accounts=Account::forDropdownmainaccount($business_id,true);
+          $accounts=Account::forDropdownmainaccount($business_id,false);
+          $sub_accounts=Account::forDropdownsubaccount($business_id,false);
+
         return view('contact.create')
             ->with(compact('types', 'customer_groups', 'selected_type',
-                'module_form_parts', 'users','accounts'));
+                'module_form_parts', 'users','accounts','sub_accounts'));
     }
 
     /**
@@ -595,6 +597,12 @@ class ContactController extends Controller
                 'shipping_custom_field_details', 'assigned_to_users','commercial_register',
                 'account_id'
                  ]);
+
+        if($request->routing_type==='main_account'){
+            $input['account_id']=$request->account_id;//XXXXX
+        }else{
+            $input['account_id']=$request->sub_account_id;
+        }
 
             $name_array = [];
 
@@ -644,7 +652,7 @@ class ContactController extends Controller
 
                     return $output;
                 }
-                $data=[
+                $account_data=[
                     'business_id'=>$business_id,
                     'account_type_id'=>4,// Account type for contacts (4)
                     'account_code' => $request->contact_id,
@@ -661,13 +669,15 @@ class ContactController extends Controller
 
             DB::beginTransaction();
 
-            if(!empty($input['account_id'])){
-                $chartofaccount=Account::create($data);
+
+
+            if($request->routing_type==='main_account'){
+                $chartofaccount=Account::create($account_data);
+                $input['account_id']=$chartofaccount->id;
             }
 
+
             $output = $this->contactUtil->createNewContact($input);
-
-
             $this->moduleUtil->getModuleData('after_contact_saved', ['contact' => $output['data'], 'input' => $request->input()]);
 
             $this->contactUtil->activityLog($output['data'], 'added');
@@ -946,6 +956,8 @@ class ContactController extends Controller
                             ->update(['allow_login' => 0]);
 
                         $contact->delete();
+                        //
+                        Account::where('id',$contact->account_id)->delete();
                     }
                     $output = ['success' => true,
                                 'msg' => __("contact.deleted_success")

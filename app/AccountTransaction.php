@@ -60,9 +60,12 @@ class AccountTransaction extends Model
      */
     public static function createAccountTransaction($data)
     {
+
           $transaction_data = [
             'amount' => $data['amount'],
             'account_id' => $data['account_id'],
+            'business_id' => !empty($data['business_id'])?$data['business_id']:null,
+            'contact_id' =>!empty($data['contact_id'])?$data['contact_id']:null,
             'type' => $data['type'],
             'sub_type' => !empty($data['sub_type']) ? $data['sub_type'] : null,
             'operation_date' => !empty($data['operation_date']) ? $data['operation_date'] : \Carbon::now(),

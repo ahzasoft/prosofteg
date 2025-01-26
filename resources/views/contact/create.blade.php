@@ -38,8 +38,84 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('supplier_business_name', __('business.business_name') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-briefcase"></i>
+                        </span>
+                        {!! Form::text('supplier_business_name', null, ['class' => 'form-control']); !!}
+                    </div>
+                </div>
+            </div>
 
             <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('first_name', __( 'business.first_name' ) . ':*') !!}
+                    {!! Form::text('first_name', null, ['class' => 'form-control', 'required']); !!}
+                </div>
+            </div>
+
+            <div class="col-md-3 hidden">
+                <div class="form-group">
+                    {!! Form::label('middle_name', __( 'lang_v1.middle_name' ) . ':') !!}
+                    {!! Form::text('middle_name', null, ['class' => 'form-control' ]); !!}
+                </div>
+            </div>
+            <div class="col-md-3 hidden">
+                <div class="form-group">
+                    {!! Form::label('last_name', __( 'business.last_name' ) . ':') !!}
+                    {!! Form::text('last_name', null, ['class' => 'form-control' ]); !!}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('mobile', __('contact.mobile') . ':*') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-mobile"></i>
+                        </span>
+                        {!! Form::text('mobile', null, ['class' => 'form-control', 'required']); !!}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('alternate_number', __('contact.alternate_contact_number') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-phone"></i>
+                        </span>
+                        {!! Form::text('alternate_number', null, ['class' => 'form-control']); !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('landline', __('contact.landline') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-phone"></i>
+                        </span>
+                        {!! Form::text('landline', null, ['class' => 'form-control']); !!}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('routing_type','نوع التوجيه') !!}
+                  <select class="form-control select2" id="routing_type" name="routing_type">
+                      <option value="main_account">  إنشاء حساب فرعي جديد</option>
+                      <option value="sub_account">الربط مع حساب فرعي</option>
+                  </select>
+                </div>
+            </div>
+            <div class="col-md-4" id="main_account_dev">
                 <div class="form-group">
                     {!! Form::label('account_id', __('account.main_accounts') ) !!}
                     {!! Form::select('account_id', $accounts,null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'parent_id' ]); !!}
@@ -47,6 +123,13 @@
                 </div>
             </div>
 
+            <div class="col-md-4 hidden " id="sub_account_dev">
+                <div class="form-group ">
+                    {!! Form::label('sub_account_id','الحساب الفرعي : ') !!}
+                    {!! Form::select('sub_account_id', $sub_accounts,null, ['class' => 'form-control select2 ', 'style' => 'width:100%', 'id' => 'sub_account_id' ]); !!}
+
+                </div>
+            </div>
 
 
             <div class="col-md-4">
@@ -98,17 +181,7 @@
 
 
             <div class="clearfix customer_fields"></div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {!! Form::label('supplier_business_name', __('business.business_name') . ':') !!}
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-briefcase"></i>
-                        </span>
-                        {!! Form::text('supplier_business_name', null, ['class' => 'form-control']); !!}
-                    </div>
-                </div>
-            </div>
+
 
 
 
@@ -118,60 +191,6 @@
                     {!! Form::text('prefix', null, ['class' => 'form-control' ]); !!}
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {!! Form::label('first_name', __( 'business.first_name' ) . ':*') !!}
-                    {!! Form::text('first_name', null, ['class' => 'form-control', 'required']); !!}
-                </div>
-            </div>
-            <div class="col-md-3 hidden">
-                <div class="form-group">
-                    {!! Form::label('middle_name', __( 'lang_v1.middle_name' ) . ':') !!}
-                    {!! Form::text('middle_name', null, ['class' => 'form-control' ]); !!}
-                </div>
-            </div>
-            <div class="col-md-3 hidden">
-                <div class="form-group">
-                    {!! Form::label('last_name', __( 'business.last_name' ) . ':') !!}
-                    {!! Form::text('last_name', null, ['class' => 'form-control' ]); !!}
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    {!! Form::label('mobile', __('contact.mobile') . ':*') !!}
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-mobile"></i>
-                        </span>
-                        {!! Form::text('mobile', null, ['class' => 'form-control', 'required']); !!}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    {!! Form::label('alternate_number', __('contact.alternate_contact_number') . ':') !!}
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-phone"></i>
-                        </span>
-                        {!! Form::text('alternate_number', null, ['class' => 'form-control']); !!}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {!! Form::label('landline', __('contact.landline') . ':') !!}
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-phone"></i>
-                        </span>
-                        {!! Form::text('landline', null, ['class' => 'form-control']); !!}
-                    </div>
-                </div>
-            </div>
-
              <div class="col-md-4">
                 <div class="form-group">
                     {!! Form::label('email', __('business.email') . ':') !!}

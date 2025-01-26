@@ -159,7 +159,7 @@
 @stop
 @section('javascript')
     <script type="text/javascript">
-        $(document).on('change','#parent_id',function(){
+        $(document).on('change','#parent_id,#sub_account_id',function(){
             $.ajax({
                 url:"/chartofaccounts/getaccountcode/"+$('#parent_id').val(),
                 method:'GET',
@@ -170,17 +170,28 @@
             });
 
         });
+
+        $(document).on('change','#routing_type',function (){
+            var routing_type=$('#routing_type').val();
+            if(routing_type==='main_account'){
+                $('#main_account_dev').removeClass('hidden');
+                $('#sub_account_dev').addClass('hidden');
+            }else{
+                $('#main_account_dev').addClass('hidden');
+                $('#sub_account_dev').removeClass('hidden');
+            }
+
+
+        });
+
     </script>
 
 @if(!empty($api_key))
 <script>
-  // This example adds a search box to a map, using the Google Place Autocomplete
-  // feature. People can enter geographical searches. The search box will return a
-  // pick list containing a mix of places and predicted search terms.
 
-  // This example requires the Places library. Include the libraries=places
-  // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+
+
 
   function initAutocomplete() {
     var map = new google.maps.Map(document.getElementById('map'), {

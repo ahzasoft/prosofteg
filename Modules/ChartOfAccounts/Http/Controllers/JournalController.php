@@ -4,6 +4,7 @@ namespace Modules\ChartOfAccounts\Http\Controllers;
 
 use App\Account;
 use App\AccountTransaction;
+use App\Contact;
 use App\Media;
 use App\Transaction;
 use App\Utils\ProductUtil;
@@ -12,6 +13,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use mysql_xdevapi\Exception;
 use Yajra\DataTables\Facades\DataTables;
 
 class JournalController extends Controller
@@ -107,13 +109,25 @@ class JournalController extends Controller
                     ->join('account_types','account_types.id','accounts.account_type_id')
                     ->whereIn('account_types.id',[3,4,5])-> pluck('accounts.name','accounts.id');
 
+        $customers=Contact::where('contacts.business_id',$business_id)
+            ->whereIn('type',['customer','both'])
+             -> pluck('contacts.name','id');
+
+        $suppliers=Contact::where('contacts.business_id',$business_id)
+            ->whereIn('type',['supplier','both'])
+            -> pluck('contacts.name','id');
+
+
         //حسابات الخزن
         $save_account=Account::where('business_id',$business_id)
                    ->where('account_type_id',6)->pluck('name','id');
 
         $currentdate=$this->commonUtil->format_date(now(),false);
 
-        return view('chartofaccounts::journal.cash_receipt.create',compact(['accounts','account','save_account','currentdate']));
+        return view('chartofaccounts::journal.cash_receipt.create',compact(['accounts','account',
+            'save_account','currentdate'
+          ,'customers','suppliers'
+        ]));
     }
 
     public function get_cash_receipt(Request $request){
@@ -155,8 +169,18 @@ class JournalController extends Controller
             $html .="</td>";
             $html .="<td> ".$this->commonUtil->format_date($row->transaction_date, false) ."</td>";
             $html .="<td>".$row->description."</td>";
+
            $account=AccountTransaction::where('transaction_id',$row->id)
-                ->join('accounts','accounts.id','account_transactions.account_id')->get();
+                ->join('accounts','accounts.id','account_transactions.account_id')
+                ->leftjoin('contacts','contacts.id','account_transactions.contact_id')
+               ->select('accounts.name as account_name','account_transactions.type as type'
+                        ,'amount','contacts.name as contact_name'
+
+
+               )
+
+
+               ->get();
 
            $loop=0;
 
@@ -167,7 +191,11 @@ class JournalController extends Controller
                    <td class='account-link'> <i class='fa fa-angle-left' ></i>   </td>
                    <td colspan='2'>".$row->additional_notes."</td>";
 
-               $html .="<td> ".$record->name."</td>";
+               $conatact_name="";
+               if(!empty($record->contact_name)){
+                   $conatact_name=" ( ".$record->contact_name." ) ";
+               }
+               $html .="<td> ".$record->account_name.$conatact_name."</td>";
                if($record->type=='debit'){
                    $html .="<td> ".$this->commonUtil->num_f($record->amount, true) ."</td>";
                    $html .="<td> </td>";
@@ -315,48 +343,82 @@ class JournalController extends Controller
             'additional_notes'=>$request->input('additional_notes'),
         ];
 
-       DB::beginTransaction();
-        $transaction=Transaction::create($transaction_data);
+        $contact_id=0;
+        $account_id=0;
+        if($request->account_type==="sub_account"){
+            $account_id=$request->sub_account;
+            $contact_id=0;
+        }
 
-             $debit_data = [
-            'business_id'=>$business_id,
-            'amount' =>$request->amount,
-            'account_id' => $request->debit_account,
-            'type' => 'debit',
-            'sub_type' => 'fund_transfer',
-            'created_by' => session()->get('user.id'),
-            'note' => '',
-            'transaction_id' => $transaction->id,
-            'operation_date' => $this->commonUtil->uf_date($request->input('transaction_date'), false),
-        ];
+        if($request->account_type==="customer"){
+            $contact_id=$request->customer;
+            $data=Contact::where('id',$contact_id)->first();
+            if(!empty($data))
+               $account_id=$data->account_id;
+        }
 
-        $debit = AccountTransaction::createAccountTransaction($debit_data);
-
-        $credit_data = [
-            'business_id'=>$business_id,
-            'amount' =>$request->amount,
-            'account_id' => $request->credit_account,
-            'type' => 'credit',
-            'sub_type' => 'fund_transfer',
-            'created_by' => session()->get('user.id'),
-            'note' =>'',
-            'transaction_id' => $transaction->id,
-            'transfer_transaction_id'=>$debit->id,
-            'operation_date' => $this->commonUtil->uf_date($request->input('transaction_date'), false),
-        ];
-
-        $credit = AccountTransaction::createAccountTransaction($credit_data);
-        $debit->transfer_transaction_id = $credit->id;
-        $debit->save();
+        if($request->account_type==="supplier"){
+            $contact_id=$request->supplier;
+            $data=Contact::where('id',$contact_id)->first();
+            if(!empty($data))
+                $account_id=$data->account_id;
+        }
 
 
-        Media::uploadMedia($business_id, $transaction, $request, 'document');
+        try {
+            DB::beginTransaction();
 
-        DB::commit();
+            $transaction = Transaction::create($transaction_data);
 
-        $output=['success'=>true,
-            'msg'=>'تم حفظ السند بنجاح'];
 
+            // from account
+            $debit_data = [
+                'business_id' => $business_id,
+                'amount' => $request->amount,
+                'account_id' => $account_id,
+                'contact_id' => $contact_id,
+                'type' => 'debit',
+                'sub_type' => 'fund_transfer',
+                'created_by' => session()->get('user.id'),
+                'note' => '',
+                'transaction_id' => $transaction->id,
+                'operation_date' => $this->commonUtil->uf_date($request->input('transaction_date'), false),
+            ];
+
+
+            $debit = AccountTransaction::createAccountTransaction($debit_data);
+
+            // To account
+            $credit_data = [
+                'business_id' => $business_id,
+                'amount' => $request->amount,
+                'account_id' => $request->credit_account,
+                'type' => 'credit',
+                'sub_type' => 'fund_transfer',
+                'created_by' => session()->get('user.id'),
+                'note' => '',
+                'transaction_id' => $transaction->id,
+                'transfer_transaction_id' => $debit->id,
+                'operation_date' => $this->commonUtil->uf_date($request->input('transaction_date'), false),
+            ];
+
+            $credit = AccountTransaction::createAccountTransaction($credit_data);
+            $debit->transfer_transaction_id = $credit->id;
+            $debit->save();
+
+
+            Media::uploadMedia($business_id, $transaction, $request, 'document');
+
+            DB::commit();
+            $output = ['success' => true,
+                'msg' => 'تم حفظ السند بنجاح'];
+        }catch (Exception){
+
+            DB::rollBack();
+            $output = ['success' => false,
+                'msg'=>'عفوا لقد حدث شئ خاطئ'
+            ];
+        }
         return $output;
     }
 

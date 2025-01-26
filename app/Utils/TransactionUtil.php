@@ -5780,6 +5780,13 @@ class TransactionUtil extends Util
         return $parent_payment;
     }
 
+
+    public function cash_receipt_add($debit_data,$cridet){
+
+    }
+
+
+
     public function addSellReturn($input, $business_id, $user_id, $uf_number = true)
     {
         $discount = [

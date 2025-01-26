@@ -33,5 +33,8 @@ return [
     'receipt_amount'=>'المبلغ',
     "payment_receipt"=>"سند صرف",
     "Journal_entry"=>"قيد يومية",
+    "supplier_account"=>"حسابات الموردين",
+    "customer_account"=>"حسابات العملاء",
+
 
 ];
