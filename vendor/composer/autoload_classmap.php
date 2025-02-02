@@ -151,6 +151,7 @@ return array(
     'App\\Mail\\Mail' => $baseDir . '/app/Mail/Mail.php',
     'App\\Media' => $baseDir . '/app/Media.php',
     'App\\Models\\Ahmed' => $baseDir . '/app/Models/Ahmed.php',
+    'App\\Models\\CostCenter' => $baseDir . '/app/Models/CostCenter.php',
     'App\\Models\\FundTransfer' => $baseDir . '/app/Models/FundTransfer.php',
     'App\\Models\\GithubLog' => $baseDir . '/app/Models/GithubLog.php',
     'App\\Models\\TransactionType' => $baseDir . '/app/Models/TransactionType.php',

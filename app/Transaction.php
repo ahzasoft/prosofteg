@@ -254,7 +254,9 @@ class Transaction extends Model
                 'sell_return' => __('lang_v1.sell_return'),
                 'purchase_return' =>  __('lang_v1.purchase_return'),
                 'opening_balance' => __('lang_v1.opening_balance'),
-                'payment' => __('lang_v1.payment')
+                'payment' => __('lang_v1.payment'),
+                'sell_payment' => __('account.cash_receipt'),
+                'purchase_payment' => __('account.payment_receipt'),
             ];
     }
 

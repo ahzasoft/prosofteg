@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title',__('chartofaccounts::lang.cash_receipt'))
+@section('title',__('chartofaccounts::lang.payment_receipt'))
 
 @section('content')
     @include('chartofaccounts::layouts.style')
@@ -7,14 +7,14 @@
     <section class="content">
         <section class="content ">
             @if(!empty($account->id))
-                <h4 class="modal-title mb-10">@lang( 'chartofaccounts::lang.edit_cash_receipt' ) : <span style="color: #6F1212ED;">{{$account->account_code}} - {{$account->name}}</span></h4>
+                <h4 class="modal-title mb-10">@lang( 'chartofaccounts::lang.edit_payment_receipt' ) : <span style="color: #6F1212ED;">{{$account->account_code}} - {{$account->name}}</span></h4>
             @else
-                <h4 class="modal-title mb-10">@lang( 'chartofaccounts::lang.add_cash_receipt' )</h4>
+                <h4 class="modal-title mb-10">@lang( 'messages.add' ) @lang(('chartofaccounts::lang.payment_receipt'))</h4>
             @endif
 
 
-            @component('components.widget', ['class' => 'box-primary', 'title' => __('chartofaccounts::lang.cash_receipt')])
-                 {!! Form::open(['url' => action('\Modules\ChartOfAccounts\Http\Controllers\JournalController@cash_receipt_save'),
+            @component('components.widget', ['class' => 'box-primary', 'title' => __('chartofaccounts::lang.payment_receipt')])
+                 {!! Form::open(['url' => action('\Modules\ChartOfAccounts\Http\Controllers\JournalController@payment_receipt_save'),
                    'method' => 'post','id' => 'cash_receipt_save', 'files' => true ]) !!}
 
 
@@ -71,8 +71,8 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        {!! Form::label('credit_account', __('chartofaccounts::lang.save_account') ) !!}
-                                        {!! Form::select('credit_account', $save_account,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'save_account' ]); !!}
+                                        {!! Form::label('debit_account', __('chartofaccounts::lang.save_account') ) !!}
+                                        {!! Form::select('debit_account', $save_account,$account->parent_id, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'save_account' ]); !!}
                                     </div>
                                 </div>
 
@@ -200,7 +200,7 @@
              if (result.success == true) {
                toastr.success(result.msg);
                  setTimeout(function() {
-                     window.location = '/journal/cash_receipt';
+                     window.location = '/journal/payment_receipt';
                  }, 4000);
              } else {
                  toastr.error(result.msg);

@@ -53,7 +53,9 @@ class AddAccountTransaction
                 'operation_date' => $event->transactionPayment->paid_on,
                 'created_by' => $event->transactionPayment->created_by,
                 'transaction_id' => $event->transactionPayment->transaction_id,
-                'transaction_payment_id' =>  $event->transactionPayment->id
+                'transaction_payment_id' =>  $event->transactionPayment->id,
+                'business_id'=>$event->formInput['business_id'],
+                'contact_id'=>$event->formInput['payment_for'],
             ];
 
             //If change return then set type as debit

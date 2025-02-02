@@ -47,6 +47,13 @@ Route::middleware(['web',  'SetSessionData', 'auth', 'language', 'timezone', 'Ad
     Route::post( '/cash_receipt_save','JournalController@cash_receipt_save');
     Route::get( '/get_account_type','JournalController@get_account_type');
 
+    /* payment_receipt_add */
+    Route::get( '/payment_receipt','JournalController@payment_receipt');
+    Route::get( '/get_payment_receipt','JournalController@get_payment_receipt');
+    Route::get( '/payment_receipt_add','JournalController@payment_receipt_add');
+    Route::get( '/payment_receipt_delete/{id}','JournalController@payment_receipt_delete');
+    Route::post( '/payment_receipt_save','JournalController@payment_receipt_save');
+
 
     Route::resource( '/','JournalController');
 });

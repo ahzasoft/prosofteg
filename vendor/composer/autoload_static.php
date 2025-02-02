@@ -1002,6 +1002,7 @@ class ComposerStaticInit63780a0bb2e0333466b4f3f9db9c4e15
         'App\\Mail\\Mail' => __DIR__ . '/../..' . '/app/Mail/Mail.php',
         'App\\Media' => __DIR__ . '/../..' . '/app/Media.php',
         'App\\Models\\Ahmed' => __DIR__ . '/../..' . '/app/Models/Ahmed.php',
+        'App\\Models\\CostCenter' => __DIR__ . '/../..' . '/app/Models/CostCenter.php',
         'App\\Models\\FundTransfer' => __DIR__ . '/../..' . '/app/Models/FundTransfer.php',
         'App\\Models\\GithubLog' => __DIR__ . '/../..' . '/app/Models/GithubLog.php',
         'App\\Models\\TransactionType' => __DIR__ . '/../..' . '/app/Models/TransactionType.php',

@@ -110,7 +110,7 @@
                     <li class="
                         @if(!empty($view_type) &&  $view_type == 'activities')  active @else '' @endif">
                         <a href="#activities_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-pen-square" aria-hidden="true"></i> @lang('lang_v1.activities')</a>
-                        </li>
+                    </li>
 
                     @if(!empty($contact_view_tabs))
                         @foreach($contact_view_tabs as $key => $tabs)

@@ -428,11 +428,15 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
         Route::get('/link-account/{id}', 'AccountReportsController@getLinkAccount');
         Route::post('/link-account', 'AccountReportsController@postLinkAccount');
         Route::get('/cash-flow', 'AccountController@cashFlow');
-
-
         Route::get('/getaccount_type','AccountController@account_types');
 
-
+        /* Cost Center*/
+        Route::get('/costcenter','CostCenterController@index');
+        Route::get('/costcenter_create','CostCenterController@create');
+        Route::post('/costcenter_create','CostCenterController@store');
+        Route::get('/costcenter_edit/{id}', 'CostCenterController@edit');
+        Route::get('/costcenter_delete/{id}', 'CostCenterController@delete');
+        Route::get('/costcenter_show/{id}', 'CostCenterController@show');
 
     });
 

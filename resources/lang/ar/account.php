@@ -56,5 +56,13 @@ return [
 "account_nature"=>"طبيعه الحساب",
 "account_code"=>"كود الحساب",
 "code_found"=>"عفوا هذا الكود موجود من قبل",
+"cash_receipt"=>"سند قبض",
+"payment_receipt"=>"سند صرف",
+"cost_centers"=>'مراكز التكلفة',
+"cost_center_add"=>'إضافة مركز تكلفة',
+"cost_center_name"=>'إسم مركز تكلفة',
+"cost_center_code"=>'كود مركز تكلفة',
+"cost_center_main"=>'مركز تكلفة رئيسي',
+"cost_center_branch"=>'مركز تكلفة فرعي',
 
 ];

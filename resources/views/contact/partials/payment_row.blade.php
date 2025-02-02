@@ -44,7 +44,8 @@
             $ref_no = $payment->transaction->ref_no ?? $payment->ref_no;
         @endphp
         @if($transaction_type == 'sell')
-            <a data-href="{{action('SellController@show', [$transaction_id])}}" href="#" data-container=".view_modal" class="btn-modal">{{$invoice_no}}</a> <br> <small>({{__('sale.sale')}}) </small>
+            <small>{{__('sale.sale')}} </small><br>
+            <a data-href="{{action('SellController@show', [$transaction_id])}}" href="#" data-container=".view_modal" class="btn-modal">{{$invoice_no}}</a>
 
         @elseif($transaction_type == 'sell_return')
             <a data-href="{{action('SellReturnController@show', [$return_parent_id])}}" href="#" data-container=".view_modal" class="btn-modal">{{$invoice_no }}</a> <br> <small>({{__('lang_v1.sell_return')}}) </small>
@@ -52,19 +53,28 @@
             <a data-href="{{action('PurchaseReturnController@show', [$return_parent_id])}}" href="#" data-container=".view_modal" class="btn-modal">{{$ref_no}}</a> <br> <small>({{__('lang_v1.purchase_return')}}) </small>
         @elseif ($transaction_type == 'purchase')
             <a data-href="{{action('PurchaseController@show', [$transaction_id])}}" href="#" data-container=".view_modal" class="btn-modal">{{$ref_no}}</a> <br> <small>({{__('lang_v1.purchase')}}) </small>
-        @else 
-            @if(!empty($transaction_id))
-                {{$ref_no}} <br> <small>({{__('lang_v1.' . $transaction_type)}}) </small>
-            @endif
-        @endif
-    </td>
-    <td @if($count_child_payments > 0) class="bg-gray" @endif>
-        <button type="button" class="btn btn-primary btn-xs btn-modal" data-href="{{action('TransactionPaymentController@viewPayment', [$payment->id])}}" data-container=".view_modal"><i class="fas fa-eye"></i>{{__('messages.view')}}</button>
 
-        @if(!empty($transaction_id))
-             <button type="button" class="btn btn-info btn-xs btn-modal" data-href="{{action('TransactionPaymentController@edit', [$payment->id])}}" data-container=".view_modal"><i class="fas fa-edit"></i> {{__('messages.edit')}}</button>
+        @elseif($payment->is_journal>0)
+            <small>@lang('account.cash_receipt') </small>
+
+        @elseif(!empty($transaction_id))
+                 <small>({{__('lang_v1.' . $transaction_type)}}) </small> <br> {{$ref_no}}
+
         @endif
-        
-        <button type="button" class="btn btn-danger btn-xs delete_payment" data-href="{{action('TransactionPaymentController@destroy', [$payment->id])}}" > <i class="fas fa-trash"></i>{{__('messages.delete')}}</button>
     </td>
+
+   @if($payment->is_journal==0)
+        <td @if($count_child_payments > 0) class="bg-gray" @endif>
+            <button type="button" class="btn btn-primary btn-xs btn-modal" data-href="{{action('TransactionPaymentController@viewPayment', [$payment->id])}}" data-container=".view_modal"><i class="fas fa-eye"></i>{{__('messages.view')}}</button>
+
+            @if(!empty($transaction_id))
+                 <button type="button" class="btn btn-info btn-xs btn-modal" data-href="{{action('TransactionPaymentController@edit', [$payment->id])}}" data-container=".view_modal"><i class="fas fa-edit"></i> {{__('messages.edit')}}</button>
+            @endif
+
+            <button type="button" class="btn btn-danger btn-xs delete_payment" data-href="{{action('TransactionPaymentController@destroy', [$payment->id])}}" > <i class="fas fa-trash"></i>{{__('messages.delete')}}</button>
+        </td>
+    @else
+       <td></td>
+    @endif
+
 </tr>

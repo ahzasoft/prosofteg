@@ -701,6 +701,13 @@ class TransactionUtil extends Util
         if ($transaction->type == 'purchase') {
             $prefix_type = 'purchase_payment';
         }
+
+        $payment_type='credit';
+        if($transaction->type==='purchase' || $transaction->type==='sell_return' ){
+            $payment_type='debit';
+        }
+
+
         $contact_balance = Contact::where('id', $transaction->contact_id)->value('balance');
         foreach ($payments as $payment) {
             //Check if transaction_sell_lines_id is set.
@@ -751,7 +758,8 @@ class TransactionUtil extends Util
                         'created_by' => empty($user_id) ? auth()->user()->id : $user_id,
                         'payment_for' => $transaction->contact_id,
                         'payment_ref_no' => $payment_ref_no,
-                        'account_id' => !empty($payment['account_id']) && $payment['method'] != 'advance' ? $payment['account_id'] : null
+                        'account_id' => !empty($payment['account_id']) && $payment['method'] != 'advance' ? $payment['account_id'] : null,
+                        'payment_type'=>$payment_type,
                     ];
 
                     for ($i=1; $i<8; $i++) { 
@@ -4900,9 +4908,9 @@ class TransactionUtil extends Util
                 DB::raw("SUM(IF(type = 'purchase', final_total, 0)) as total_purchase"),
                 DB::raw("SUM(IF(type = 'sell' AND status = 'final', final_total, 0)) as total_invoice"),
                 DB::raw("SUM(IF(type = 'sell_return', final_total, 0)) as total_sell_return"),
-                    DB::raw("SUM(IF(type = 'purchase_return', final_total, 0)) as total_purchase_return"),
-                    DB::raw("SUM(IF(type = 'opening_balance', final_total, 0)) as total_opening_balance"),
-                    DB::raw("SUM(IF(type = 'ledger_discount', final_total, 0)) as total_ledger_discount")
+                DB::raw("SUM(IF(type = 'purchase_return', final_total, 0)) as total_purchase_return"),
+                DB::raw("SUM(IF(type = 'opening_balance', final_total, 0)) as total_opening_balance"),
+                DB::raw("SUM(IF(type = 'ledger_discount', final_total, 0)) as total_ledger_discount")
             )->first();
 
 
@@ -4948,6 +4956,7 @@ class TransactionUtil extends Util
                 'purchase_lines.variations.product_variation', 'purchase_lines.line_tax',
                 'purchase_lines.product.unit', 'purchase_lines.product.unit.sub_units', ];
         }
+
         //Get transaction totals between dates
         $transaction_query = $this->__transactionQuery($contact_id, $start, $end, $location_id)
                             ->with(['location'])
@@ -4966,6 +4975,7 @@ class TransactionUtil extends Util
         $opening_balance = 0;
         $opening_balance_paid = 0;
         $ledger_discount = 0;
+
 
         foreach ($transactions as $transaction) {
             if($transaction->type == 'opening_balance'){
@@ -5069,24 +5079,31 @@ class TransactionUtil extends Util
                 $note .='<small>' . __('lang_v1.advance_payment') . '</small>';
             }
 
+
+
             if ($payment->is_return == 1) {
                 $note .='<small>(' . __('lang_v1.change_return') . ')</small>';
             }
 
+            $payment_type=$payment->transaction_type?$payment->transaction_type:'payment';
+
             $ledger[] = [
                 'date' => $payment->paid_on,
                 'ref_no' => $payment->payment_ref_no,
-                'type' => $transaction_types['payment'],
+                'type' => $transaction_types[$payment_type],
                 'location' => $payment->location_name,
                 'payment_status' => '',
                 'total' => '',
                 'payment_method' => !empty($paymentTypes[$payment->method]) ? $paymentTypes[$payment->method] : '',
                 'payment_method_key' => $payment->method,
-                'debit' => in_array($payment->transaction_type, ['purchase', 'sell_return']) || ($payment->is_advance == 1 && $contact->type == 'supplier') || (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) && $payment->is_return == 1) || $payment->payment_type == 'debit' ? $payment->amount : '',
-                'credit' => (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) || ($payment->is_advance == 1 && in_array($contact->type, ['customer', 'both']))) && $payment->is_return == 0 || $payment->payment_type == 'credit' ? $payment->amount : '',
+                 /* 'debit' => in_array($payment->transaction_type, ['purchase', 'sell_return']) || ($payment->is_advance == 1 && $contact->type == 'supplier') || (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) && $payment->is_return == 1) || $payment->payment_type == 'debit' ? $payment->amount : '',
+                'credit' => (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) || ($payment->is_advance == 1 && in_array($contact->type, ['customer', 'both']))) && $payment->is_return == 0 || $payment->payment_type == 'credit' ? $payment->amount : '',*/
+                'debit' => $payment->payment_type == 'debit' ? $payment->amount : '',
+                'credit'=> $payment->payment_type == 'credit' ? $payment->amount : '',
                 'others' =>  $note,
                 'note' =>$payment->note,
             ];
+
         }
 
         $total_excess_advance_payment = $this->__paymentQuery($contact_id, $start, $end, $location_id)
@@ -5121,12 +5138,18 @@ class TransactionUtil extends Util
         $total_purchase = $purchase_sum - $purchase_return_sum;
 
         $opening_balance_due = $opening_balance;
-        $total_paid = $total_invoice_paid + $total_purchase_paid - $total_sell_return_paid - $total_purchase_return_paid + $total_excess_advance_payment - $total_advance_payment;
-//dd($total_invoice_paid , $total_purchase_paid , $total_sell_return_paid , $total_purchase_return_paid , $total_excess_advance_payment , $total_advance_payment);
+
+        $total_debit = ! empty($payments) ? $payments->where('payment_type', 'debit')->sum('amount') : 0;
+        $total_credit = ! empty($payments) ? $payments->where('payment_type', 'credit')->sum('amount') : 0;
+        /*todo: */
+
+        $total_paid=$total_credit;
+
+        //$total_paid =$total_invoice_paid + $total_purchase_paid - $total_sell_return_paid - $total_purchase_return_paid + $total_excess_advance_payment - $total_advance_payment;
         $total_transactions_paid = $total_invoice_paid + $total_purchase_paid - $total_sell_return_paid - $total_purchase_return_paid;
 
-        $curr_due = $total_invoice + $total_purchase - $total_transactions_paid + $beginning_balance + $opening_balance_due;
-
+        //$curr_due = $total_invoice + $total_purchase - $total_transactions_paid + $beginning_balance + $opening_balance_due;
+        $curr_due=$total_debit+$total_invoice-$total_credit;
         //Sort by date
         if (!empty($ledger)) {
             usort($ledger, function ($a, $b) {
@@ -5151,9 +5174,9 @@ class TransactionUtil extends Util
             'debit' => $contact->type == 'customer' ? abs($total_opening_bal) : '',
             'credit' => $contact->type == 'supplier' ? abs($total_opening_bal) : '',
             'others' => '',
-                'final_total' => abs($total_opening_bal),
-                'total_due' => 0,
-                'due_date' => null,
+            'final_total' => abs($total_opening_bal),
+            'total_due' => 0,
+            'due_date' => null,
         ]], $ledger) ;
         }
 
@@ -5203,17 +5226,19 @@ class TransactionUtil extends Util
             'ledger_discount' => $ledger_discount,
         ];
 
-
-        /* Get total paid add by ali */
-        $balance=Contact::where('id',$contact_id)->first();
+       /* Get total paid add by ali */
+       /* $balance=Contact::where('id',$contact_id)->first();
         $totalpaid=TransactionPayment::where('payment_for',$contact_id)->whereNotNull('transaction_id')
          ->select(DB::raw('SUM(transaction_payments.amount) as amount'))->first();
          
-         $output['total_paid']=$totalpaid['amount']+$balance['balance'];
+         $output['total_paid']=$totalpaid['amount']+$balance['balance'];*/
 
          if($contact->type == 'supplier'){
              $output['balance_due']=$output['total_purchase']+$output['beginning_balance']-$output['total_paid'];
+             $output['balance_due']=$total_credit-$total_debit+$total_invoice;
          }
+
+
 
         
         return $output;
@@ -5228,9 +5253,9 @@ class TransactionUtil extends Util
         $transaction_type_keys = array_keys(Transaction::transactionTypes());
 
         $query = Transaction::where('transactions.contact_id', $contact_id)
-                        ->where('transactions.business_id', $business_id)
-                        ->where('transactions.status', '!=', 'draft')
-                        ->whereIn('transactions.type', $transaction_type_keys);
+            ->where('transactions.business_id', $business_id)
+            ->where('transactions.status', '!=', 'draft')
+            ->whereIn('transactions.type', $transaction_type_keys);
 
         if (!empty($start)  && !empty($end)) {
             $query->whereDate(
@@ -5272,7 +5297,7 @@ class TransactionUtil extends Util
 
         if (!empty($start)  && !empty($end)) {
             $query->whereDate('paid_on', '>=', $start)
-                        ->whereDate('paid_on', '<=', $end);
+                  ->whereDate('paid_on', '<=', $end);
         }
 
         if (!empty($start)  && empty($end)) {
@@ -5283,7 +5308,7 @@ class TransactionUtil extends Util
             //if location id present get all transaction with the location id and opening balance
             $query->where(function ($q) use ($location_id) {
                 $q->where('transaction_payments.is_advance', 1)
-                     ->orWhere('t.location_id', $location_id);
+                   ->orWhere('t.location_id', $location_id);
             });
         }
 
@@ -5685,6 +5710,7 @@ class TransactionUtil extends Util
 
     public function payContact($request, $format_data = true)
     {
+
         $contact_id = $request->input('contact_id');
         $business_id = auth()->user()->business_id;
         $inputs = $request->only(['amount', 'method', 'note', 'card_number', 'card_holder_name',
@@ -5700,7 +5726,9 @@ class TransactionUtil extends Util
             throw new \Exception("Payment method not found");
         }
 
-        $inputs['paid_on'] = $request->input('paid_on', \Carbon::now()->toDateTimeString());
+            $inputs['paid_on'] = $request->input('paid_on', \Carbon::now()->toDateTimeString());
+
+
         if ($format_data) {
             $inputs['paid_on'] = $this->uf_date($inputs['paid_on'], true);
             $inputs['amount'] = $this->num_uf($inputs['amount']);

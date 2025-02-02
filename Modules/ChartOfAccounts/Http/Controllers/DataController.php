@@ -46,10 +46,11 @@ class DataController extends Controller
                         );
 
                       $sub->url(
-                              action('\Modules\ChartOfAccounts\Http\Controllers\ChartOfAccountsController@index'),
-                              __('chartofaccounts::lang.cost-centers'),
-                              ['icon' => 'fa fas fa-user', 'active' => request()->segment(2) == 'assets']
+                              action('CostCenterController@index'),
+                              __('account.cost_centers'),
+                              ['icon' => 'fa fas fa-user', 'active' => request()->segment(2) == 'costcenter' && request()->segment(1)=='account']
                            );
+
                       $sub->url(
                           action('AccountReportsController@balanceSheet'),
                           __('account.balance_sheet'),
@@ -107,9 +108,9 @@ class DataController extends Controller
 
 
                              $sub->url(
-                                 action('AccountController@index'),
+                                 action('\Modules\ChartOfAccounts\Http\Controllers\JournalController@payment_receipt'),
                                  __('chartofaccounts::lang.payment_receipt'),
-                                 ['active' => request()->segment(1) == 'account' ]
+                                 ['active' =>request()->segment(1) == 'journal' && request()->segment(1) == 'account' ]
                              );
 
                              $sub->url(

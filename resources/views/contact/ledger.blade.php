@@ -42,7 +42,7 @@
 
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-12">
-			<table class="table table-condensed text-right align-right  @if(empty($for_pdf)) table-pdf @endif">
+			<table class="table table-condensed text-right align-right table-bordered  @if(empty($for_pdf)) table-pdf @endif">
 				<tr>
 					<td class="align-right">@lang('lang_v1.opening_balance') </td>
 					<td class="align-right">@format_currency($ledger_details['beginning_balance']) {{-- ( <strong><span style="color:#8f2323;"> @lang('account.credit')</span></strong>)--}}</td>
@@ -84,7 +84,7 @@
 	<p class="text-center" style="text-align: center;">
 		<strong>@lang('lang_v1.ledger_table_heading', ['start_date' => $ledger_details['start_date'], 'end_date' => $ledger_details['end_date']])</strong></p>
 	<div class="table-responsive">
-	<table class="table table-striped @if(!empty($for_pdf)) table-pdf td-border @endif" id="ledger_table">
+	<table class="table table-bordered @if(!empty($for_pdf)) table-pdf td-border @endif" id="ledger_table">
 		<thead>
 			<tr class="row-border blue-heading">
 				<th width="18%" class="text-center">@lang('lang_v1.date')</th>
