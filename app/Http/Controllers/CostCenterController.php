@@ -136,7 +136,7 @@ class CostCenterController extends Controller
                 $input);
             $output = ['success' => true,
                 'data' => $costcenter,
-                'msg' => __("brand.added_success")
+                'msg' => 'تم إضافة مركز التكلفة بنجاح'
             ];
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
